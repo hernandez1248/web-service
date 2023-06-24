@@ -16,7 +16,15 @@ module.exports = (sequelize, DataTypes) => {
   DevicesCategory.init({
     type: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "El tipo de dispositivo es obligatorio"
+        },
+        is: {
+          args: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+        }
+      }
     }
   }, {
     sequelize,
