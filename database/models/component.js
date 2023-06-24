@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         //El nombre solo permite letras, y no numeros
         is: {
-          args: [/^[A-Z a-z áéíóú]+$/i ],
+          args: [/^[0-9a-z áéíóú , . A-Z /\ +- \s]+$/i ],
           msg: "El nombre debe de contener solo letras"
         }
       }
