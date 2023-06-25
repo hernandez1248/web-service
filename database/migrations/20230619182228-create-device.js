@@ -17,6 +17,14 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: false,
       },
+      deviceCategoryId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'DevicesCategories',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -9,6 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      ordersId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Orders',
+          key: 'id'
+        }
+      },
+      componentsId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Components',
+          key: 'id'
+        }
+      },
+
       amountTotal: {
         type: Sequelize.STRING
       },

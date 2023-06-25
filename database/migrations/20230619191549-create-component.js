@@ -21,6 +21,15 @@ module.exports = {
         type: Sequelize.STRING(5),
         allowNull: false,
       },
+      deviceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Devices',
+          key: 'id'
+        }
+      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
