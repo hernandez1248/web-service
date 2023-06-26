@@ -11,9 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.State.belongsTo(models.Order,
+        {
+          as:'order', //alias parala relacion
+          foreignKey: 'ordersId', //pf en products
+        }
+        );
+
     }
   }
   State.init({
+    ordersId: {
+      type: DataTypes.INTEGER,
+    },
     date: DataTypes.STRING,
     status: DataTypes.STRING,
     description: DataTypes.STRING

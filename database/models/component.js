@@ -11,8 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.Component.belongsTo(models.Device,
+        {
+          as:'devices', //alias parala relacion
+          foreignKey: 'deviceId', //pf en products
+        }
+        );
+
+      models.Component.hasMany(models.Orderdetails,
+        {
+          as:'orderdetail', //alias parala relacion
+          foreignKey: 'componentsId', //pf en products
+        }
+        );
     }
   }
+  
   Component.init({
     name: {
       type: DataTypes.STRING,
@@ -58,6 +72,9 @@ module.exports = (sequelize, DataTypes) => {
           msg: "El stock debe contener solo números."
         }
       }
+    },
+    deviceId: {
+      type: DataTypes.INTEGER,
     },
   }, {
     sequelize,
