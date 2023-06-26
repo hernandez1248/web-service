@@ -65,22 +65,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     deviceCategoryId: {
       type: DataTypes.INTEGER,
-    },
-
-
-    type: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: "El tipo de dispositivo es obligatorio"
-        },
-        is: {
-          args: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-        }
-      }
-    }
-    
+    },    
   }, {
     sequelize,
     modelName: 'Device',
