@@ -17,23 +17,23 @@ if (config.use_env_variable) {
 }
 
 import component from './component';
+import device from './device';
+import devicescategory from './devicescategory';
+import order from './order';
+import orderdetails from './orderdetails';
+import servicescategory from './servicescategory';
+import state from './state';
+import user from './user';
 
-// fs
-//   .readdirSync(__dirname)
-//   .filter(file => {
-//     return (
-//       file.indexOf('.') !== 0 &&
-//       file !== basename &&
-//       file.slice(-3) === '.js' &&
-//       file.indexOf('.test.js') === -1
-//     );
-//   })
-//   .forEach(file => {
-//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-//     db[model.name] = model;
-//   });
 
 db.Component = component(sequelize, Sequelize.DataTypes);
+db.Device = device(sequelize, Sequelize.DataTypes);
+db.Devicescategory = devicescategory(sequelize, Sequelize.DataTypes);
+db.Order = order(sequelize, Sequelize.DataTypes);
+db.Orderdetails = orderdetails(sequelize, Sequelize.DataTypes);
+db.Servicescategory = servicescategory(sequelize, Sequelize.DataTypes);
+db.State = state(sequelize, Sequelize.DataTypes);
+db.User = user(sequelize, Sequelize.DataTypes);
 
 
 Object.keys(db).forEach(modelName => {
