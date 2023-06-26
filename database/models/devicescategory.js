@@ -12,6 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
       // define association here
+      models.Devicescategory.hasMany(models.Device,
+        {
+          as:'device', //alias parala relacion
+          foreignKey: 'deviceCategoryId', //pf en products
+        }
+        );
     }
 
 
@@ -24,11 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "El categoria de dispositivo es obligatorio"
+          msg: "El tipo de dispositivo es obligatorio"
         },
         is: {
           args: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-          msg: "La categoria de dispositivo solo debe contener letras"
         }
       }
     }
