@@ -10,22 +10,30 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(64),
+        allowNull: false,
       },
       lastName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(64),
+        allowNull: false, 
       },
       phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(16),
+        allowNull: false,
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(128),
+        allowNull: false,
+        unique:true,
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(64),
+        allowNull: false,
       },
       rol: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING(16),
+        allowNull: false,
+        defaultValue:'empleado',
       },
       createdAt: {
         allowNull: false,
