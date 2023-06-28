@@ -73,10 +73,6 @@ module.exports = (sequelize, DataTypes) => {
           notNull: {
             msg: "La contraseña es obligatorio",
           },
-          len: {
-            args: [8, 255],
-            msg: "La contraseña debe contener minimo 8 caracteres",
-          },
         },
       },
       rol: {
