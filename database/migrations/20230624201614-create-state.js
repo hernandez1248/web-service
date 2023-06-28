@@ -18,13 +18,16 @@ module.exports = {
         }
       },
       date: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(10),
+        allowNull: false,
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(15),
+        allowNull: false,
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(300),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
