@@ -17,40 +17,40 @@ export default function handler(req,res) {
 
 const orderList = async (req, res) => {
     try {
-        //leer el Device a filtrar
-        const { deviceId } = req.query;
-        const { queryDevice } = req.query;
+        //leer el Order a filtrar
+        const { orderId } = req.query;
+        const { queryOrder } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
-        //leer los Device
-        let devices = [];
-        if (deviceId) {
-            devices = await db.Device.findAll({
+        //leer los Order
+        let orders = [];
+        if (orderId) {
+            orders = await db.Order.findAll({
             where: {
-                id:deviceId,
+                id:orderId,
             },
-                include: ['deviceCategory','component','order'],
+                include: ['servicescategory','device','user','orderdetails','state'],
             });
-        }else if(queryDevice){
+        }else if(queryOrder){
             
-            devices = await db.Device.findAll({
+            orders = await db.Order.findAll({
                 where: {
                     [Op.or]: [{
                     name: {//[Op.like]: 'tra%'
-                        [Op.like]: queryDevice+'%'
+                        [Op.like]: queryOrder+'%'
                     }}
                 ]
             },
             });
         }else {
-            devices = await db.Device.findAll({
-                include: ['deviceCategory','component','order'],
+            orders = await db.Order.findAll({
+                include: ['servicescategory','device','user','orderdetails','state'],
             })
         }
 
 
-        return res.json(devices);
+        return res.json(orders);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
@@ -67,24 +67,24 @@ const orderList = async (req, res) => {
 const orderDelete = async (req, res) => {
     try {
         //leer la categoria a filtrar
-        const { deviceSelected } = req.query;        
-        //leer los Device
-        let devices = [];
-        if (deviceSelected) {
-            devices = await db.Device.destroy({
+        const { orderSelected } = req.query;        
+        //leer los Order
+        let orders = [];
+        if (orderSelected) {
+            orders = await db.Order.destroy({
                 where: {
-                    id: deviceSelected
+                    id: orderSelected
             },
-                include: ['deviceCategory','component','order'],
+                include: ['servicescategory','device','user','orderdetails','state'],
             });
         } 
         
         else {
-            devices = await db.Device.findAll({
-                include: ['deviceCategory','component','order'],
+            orders = await db.Order.findAll({
+                include: ['servicescategory','device','user','orderdetails','state'],
             })
         }
-        return res.json(devices);
+        return res.json(orders);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
