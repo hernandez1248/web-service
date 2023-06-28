@@ -37,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'El nombre es obligatorio'
         },
         //El nombre solo permite letras, y no numeros
-        is: {
-          args: [/^[0-9a-z áéíóú , . A-Z /\ +- \s]+$/i ],
-          msg: "El nombre debe de contener solo letras"
-        }
+        // is: {
+        //   args: [/^[0-9a-z áéíóú , . A-Z /\ +- \s]+$/i ],
+        //   msg: "El nombre debe de contener solo letras"
+        // }
       }
     },
     price: {
