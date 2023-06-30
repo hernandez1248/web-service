@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.6",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "formidable": "^3.4.0",
     "mysql2": "^3.3.5",
@@ -17,6 +21,7 @@
     "nodemailer": "^6.9.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.45.1",
     "sequelize": "^6.32.1"
   }
 }

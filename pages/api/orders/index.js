@@ -17,40 +17,40 @@ export default function handler(req,res) {
 
 const orderList = async (req, res) => {
     try {
-        //leer el Device a filtrar
-        const { deviceId } = req.query;
-        const { queryDevice } = req.query;
+        //leer el Order a filtrar
+        const { orderId } = req.query;
+        const { queryOrder } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
-        //leer los Device
-        let devices = [];
-        if (deviceId) {
-            devices = await db.Device.findAll({
+        //leer los Order
+        let orders = [];
+        if (orderId) {
+            orders = await db.Order.findAll({
             where: {
-                id:deviceId,
+                id:orderId,
             },
-                include: ['deviceCategory','component','order'],
+                include: ['servicescategory','device','user','orderdetails','state'],
             });
-        }else if(queryDevice){
+        }else if(queryOrder){
             
-            devices = await db.Device.findAll({
+            orders = await db.Order.findAll({
                 where: {
                     [Op.or]: [{
                     name: {//[Op.like]: 'tra%'
-                        [Op.like]: queryDevice+'%'
+                        [Op.like]: queryOrder+'%'
                     }}
                 ]
             },
             });
         }else {
-            devices = await db.Device.findAll({
-                include: ['deviceCategory','component','order'],
+            orders = await db.Order.findAll({
+                include: ['servicescategory','device','user','orderdetails','state'],
             })
         }
 
 
-        return res.json(devices);
+        return res.json(orders);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
@@ -63,28 +63,45 @@ const orderList = async (req, res) => {
     }
 }
 
-
 const orderDelete = async (req, res) => {
     try {
         //leer la categoria a filtrar
-        const { deviceSelected } = req.query;        
-        //leer los Device
-        let devices = [];
-        if (deviceSelected) {
-            devices = await db.Device.destroy({
+        const { orderSelected } = req.query;        
+        //leer los Order
+        let stateSearchDelete = [];
+        let orderDetailsSearchDelete = [];
+        let orders = [];
+        if (orderSelected) {
+
+            stateSearchDelete = await db.State.destroy({
                 where: {
-                    id: deviceSelected
+                    ordersId: orderSelected
             },
-                include: ['deviceCategory','component','order'],
+                include: ['order'],
+            });
+
+            orderDetailsSearchDelete = await db.Orderdetails.destroy({
+                where: {
+                    ordersId: orderSelected
+            },
+                include: ['order','component'],
+            });
+
+
+            orders = await db.Order.destroy({
+                where: {
+                    id: orderSelected
+            },
+                include: ['servicescategory','device','user','orderdetails','state'],
             });
         } 
         
         else {
-            devices = await db.Device.findAll({
-                include: ['deviceCategory','component','order'],
+            orders = await db.Order.findAll({
+                include: ['servicescategory','device','user','orderdetails','state'],
             })
         }
-        return res.json(devices);
+        return res.json(orders);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
@@ -105,17 +122,17 @@ const orderUpdate = async (req, res) => {
         console.log(req.body);
 
         //guardar el cliente
-        const devices = await db.Device.update({ 
+        const orders = await db.Order.update({ 
             ...req.body
         },{ where: {
-            id,
+            id
         },
-        include: ['deviceCategory','component','order'],
+            include: ['servicescategory','device','user','orderdetails','state'],
         });
 
         res.json({
-            devices,
-            message: 'El dispositivo fue actualizado correctamente'
+            orders,
+            message: 'La orden fue actualizada correctamente'
         });
 
     } catch(error) {
@@ -146,13 +163,49 @@ const orderAdd = async (req, res) => {
     try {
         //los datos vienen en el req.body
         console.log(req.body);
+        const { servicesId,deviceId,userId,fullName,phone,color,observations,fullPay,advancePay,remainingPay,detalles} = req.body;
+        const { componentsId, amountTotal,quantityComponent,unitPrice } = req.body;
+        const currentDate = new Date();
 
-        //guardar el dispositivo
-        const devices = await db.Order.create({ ...req.body});
+        // se crea una orden asociada a sus detalles de la misma orden
+        const newIdOrden = await db.Order.create({
+            servicesId,
+            deviceId,
+            userId,
+            fullName,
+            phone,
+            color,
+            observations,
+            fullPay,
+            advancePay,
+            remainingPay
+        });
+
+        const newState = await db.State.create({
+            ordersId:newIdOrden.id,
+            status:'Registrada'
+        })
+
+        //guardar los detalles de una orden
+        if(detalles){
+            await Promise.all(
+                detalles.map(async (direccion) => {
+                   await db.Orderdetails.create({    
+                        ordersId:newIdOrden.id,
+                        componentsId:direccion.componentsId,
+                        amountTotal:direccion.amountTotal,
+                        quantityComponent:direccion.quantityComponent,
+                        unitPrice:direccion.unitPrice
+                     });      
+                    }
+                ))
+                
+        }
+
 
         res.json({
-            devices,
-            message: 'El dispositivo se registro correctamente'
+            newIdOrden,
+            message: 'La orden se registro correctamente'
         });
 
     } catch(error) {
