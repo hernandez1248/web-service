@@ -148,7 +148,7 @@ const orderAdd = async (req, res) => {
         console.log(req.body);
 
         //guardar el dispositivo
-        const devices = await db.Device.create({ ...req.body});
+        const devices = await db.Order.create({ ...req.body});
 
         res.json({
             devices,
