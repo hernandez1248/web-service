@@ -48,7 +48,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   order.init({
-    date: DataTypes.STRING,
+    date: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
     fullName: DataTypes.STRING,
     phone: DataTypes.STRING,
     servicesId: {

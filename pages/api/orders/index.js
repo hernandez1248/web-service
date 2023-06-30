@@ -63,14 +63,31 @@ const orderList = async (req, res) => {
     }
 }
 
-
 const orderDelete = async (req, res) => {
     try {
         //leer la categoria a filtrar
         const { orderSelected } = req.query;        
         //leer los Order
+        let stateSearchDelete = [];
+        let orderDetailsSearchDelete = [];
         let orders = [];
         if (orderSelected) {
+
+            stateSearchDelete = await db.State.destroy({
+                where: {
+                    ordersId: orderSelected
+            },
+                include: ['order'],
+            });
+
+            orderDetailsSearchDelete = await db.Orderdetails.destroy({
+                where: {
+                    ordersId: orderSelected
+            },
+                include: ['order','component'],
+            });
+
+
             orders = await db.Order.destroy({
                 where: {
                     id: orderSelected
@@ -105,17 +122,17 @@ const orderUpdate = async (req, res) => {
         console.log(req.body);
 
         //guardar el cliente
-        const devices = await db.Device.update({ 
+        const orders = await db.Order.update({ 
             ...req.body
         },{ where: {
-            id,
+            id
         },
-        include: ['deviceCategory','component','order'],
+            include: ['servicescategory','device','user','orderdetails','state'],
         });
 
         res.json({
-            devices,
-            message: 'El dispositivo fue actualizado correctamente'
+            orders,
+            message: 'La orden fue actualizada correctamente'
         });
 
     } catch(error) {
@@ -146,13 +163,49 @@ const orderAdd = async (req, res) => {
     try {
         //los datos vienen en el req.body
         console.log(req.body);
+        const { servicesId,deviceId,userId,fullName,phone,color,observations,fullPay,advancePay,remainingPay,detalles} = req.body;
+        const { componentsId, amountTotal,quantityComponent,unitPrice } = req.body;
+        const currentDate = new Date();
 
-        //guardar el dispositivo
-        const devices = await db.Device.create({ ...req.body});
+        // se crea una orden asociada a sus detalles de la misma orden
+        const newIdOrden = await db.Order.create({
+            servicesId,
+            deviceId,
+            userId,
+            fullName,
+            phone,
+            color,
+            observations,
+            fullPay,
+            advancePay,
+            remainingPay
+        });
+
+        const newState = await db.State.create({
+            ordersId:newIdOrden.id,
+            status:'Registrada'
+        })
+
+        //guardar los detalles de una orden
+        if(detalles){
+            await Promise.all(
+                detalles.map(async (direccion) => {
+                   await db.Orderdetails.create({    
+                        ordersId:newIdOrden.id,
+                        componentsId:direccion.componentsId,
+                        amountTotal:direccion.amountTotal,
+                        quantityComponent:direccion.quantityComponent,
+                        unitPrice:direccion.unitPrice
+                     });      
+                    }
+                ))
+                
+        }
+
 
         res.json({
-            devices,
-            message: 'El dispositivo se registro correctamente'
+            newIdOrden,
+            message: 'La orden se registro correctamente'
         });
 
     } catch(error) {
