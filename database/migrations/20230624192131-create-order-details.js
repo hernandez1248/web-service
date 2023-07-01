@@ -26,15 +26,15 @@ module.exports = {
         }
       },
       amountTotal: {
-        type: Sequelize.STRING(5),
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       quantityComponent: {
-        type: Sequelize.STRING(5),
+        type: Sequelize.INTEGER(5),
         allowNull: false,
       },
       unitPrice: {
-        type: Sequelize.STRING(5),
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
 
