@@ -30,22 +30,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     amountTotal: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
-        //El monto total no permite agregar campos vacios
-        notNull: {
-          msg: 'El monto total es obligatorio'
+        isNumeric: {
+          msg: "El monto total debe contener solo números."
         },
-        //El monto total solo podra permitir agregar numeros
-        is: {
-          args: [/^[0-9\s]+$/i ],
-          msg: "El monto total debe contener solo números enteros."
-        }
-      }
+      },
     },
     quantityComponent: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         //La cantidad de componentes no permite agregar campos vacios
@@ -59,24 +53,19 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    unitPrice:{
-      type: DataTypes.STRING,
+    unitPrice:  {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
-        //El precio unitario no permite agregar campos vacios
-        notNull: {
-          msg: 'El precio unitario es obligatorio'
-        },
-        //El precio unitario solo podra permitir agregar numeros
-        is: {
-          args: [/^[0-9\s]+$/i ],
+        isNumeric: {
           msg: "El precio unitario solo permite números."
-        }
-      }
-    },
+        },
+      },
+    }
   }, {
     sequelize,
     modelName: 'OrderDetails',
   });
   return OrderDetails;
 };
+
