@@ -11,28 +11,24 @@ module.exports = {
     {
       brand: 'Samsung',
       model: 'A52',
-      deviceCategoryId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
       brand: 'Samsung',
-      model: 'SM-G950F',
-      deviceCategoryId: 2,
+      model: 'A10',
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
       brand: 'Dell',
       model: 'Inspiron 15 3000',
-      deviceCategoryId: 3,
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
-      brand: 'HP',
-      model: 'HP LAPTOP 14-fq0xxx',
-      deviceCategoryId: 4,
+      brand: 'Alcatel',
+      model: 'Pixi 3',
       createdAt: new Date(),
       updatedAt: new Date()
     },
