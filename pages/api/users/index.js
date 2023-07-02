@@ -41,6 +41,22 @@ const addUsers = async (req, res) => {
     //datos del usuario
     const datosUsuario = { ...req.body };
 
+    // validar contrasena antes de cifrar
+    if (datosUsuario.password.length < 8) {
+      return res
+      .status(400)
+      .json({
+        error: true,
+        message: `Ocurrio un error al procesar la información`,
+        errors: [
+          {
+            error: "La contrasena debe tener una longitud >= 8 carácteres.",
+            field: 'password',
+          }
+        ],
+      });
+    }
+
     //asegurar la contraseña
     //usar bcrypt
     //salt: generación de una cadena aleatoria deN longitud
@@ -81,16 +97,26 @@ const addUsers = async (req, res) => {
 //PUT: usuarios
 const editUsers = async (req, res) => {
   try {
-    //eliminar los datos del usuario
     const { id } = req.query;
-    await db.User.update(
-      { ...req.body },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+    const { password, ...userData } = req.body;
+
+    if (password && password.length < 8) {
+      return res.status(400).json({
+        error: true,
+        message: "La contraseña debe tener una longitud >= 8 caracteres.",
+        field: "password",
+      });
+    }
+
+    // Validar si se proporciona una nueva contraseña y cifrarla
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      userData.password = await bcrypt.hash(password, salt);
+    }
+
+    await db.User.update(userData, {
+      where: { id },
+    });
 
     res.json({
       message: "El usuario ha sido actualizado.",
@@ -99,7 +125,6 @@ const editUsers = async (req, res) => {
     console.log(error);
     let errors = [];
     if (error.errors) {
-      //extraer la información de los campos que tienen error
       errors = error.errors.map((item) => ({
         error: item.message,
         field: item.path,
@@ -107,11 +132,12 @@ const editUsers = async (req, res) => {
     }
     return res.status(400).json({
       error: true,
-      message: `Ocurrio un error al procesar la información: ${error.message}`,
+      message: `Ocurrió un error al procesar la información: ${error.message}`,
       errors,
     });
   }
 };
+
 
 //DELETE: usuarios
 const deleteUsers = async (req, res) => {
