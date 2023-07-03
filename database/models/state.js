@@ -25,19 +25,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     date: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        //La fecha no permite el campo nulo o vacio
-        notNull: {
-          msg: 'La fecha es obligatoria'
-        },
-        //La fecha solo permite el formato date: dd/mm/aaaa
-        is: {
-          args: [/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/i ],
-          msg: "La fecha debe tener el formato: dd/mm/aaaa"
-        }
-      }
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
     },
     status: {
       type: DataTypes.STRING,
