@@ -25,16 +25,19 @@ module.exports = {
           key: 'id'
         }
       },
-
       amountTotal: {
-        type: Sequelize.STRING
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
       },
       quantityComponent: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER(5),
+        allowNull: false,
       },
       unitPrice: {
-        type: Sequelize.STRING
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
       },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

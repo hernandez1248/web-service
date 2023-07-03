@@ -39,16 +39,33 @@ module.exports = (sequelize, DataTypes) => {
   Device.init({
     brand: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "El nombre del dispositivo es obligatorio"
+        },
+        is: {
+          args: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+          msg: "La marca del dispositivo solo debe de contener letras"
+        }
+      }
     },
     model: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "El modelo del dispositivo es obligatorio"
+        },
+        is: {
+          args: /^[0-9a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+          msg: "El modelo del dispositivo solo debe de contener letras y numeros"
+        }
+      }
     },
     deviceCategoryId: {
       type: DataTypes.INTEGER,
-    },
-    
+    },    
   }, {
     sequelize,
     modelName: 'Device',
