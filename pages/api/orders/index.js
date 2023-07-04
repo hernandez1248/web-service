@@ -121,7 +121,7 @@ const orderUpdate = async (req, res) => {
         const {id} = req.body;
         console.log(req.body);
 
-        //guardar el cliente
+        //actualizar la orden
         const orders = await db.Order.update({ 
             ...req.body
         },{ where: {
@@ -165,7 +165,7 @@ const orderAdd = async (req, res) => {
         console.log(req.body);
         const { servicesId,deviceId,userId,fullName,phone,color,observations,fullPay,advancePay,remainingPay,detalles} = req.body;
         const { componentsId, amountTotal,quantityComponent,unitPrice } = req.body;
-        const currentDate = new Date();
+       
 
         // se crea una orden asociada a sus detalles de la misma orden
         const newIdOrden = await db.Order.create({
@@ -176,35 +176,103 @@ const orderAdd = async (req, res) => {
             phone,
             color,
             observations,
-            fullPay,
+            fullPay:'0',
             advancePay,
             remainingPay
         });
 
         const newState = await db.State.create({
             ordersId:newIdOrden.id,
-            status:'Registrada'
+            status:'Registrada',
+            description:"Se registro correctamente la orden"
+
         })
 
+        let moveDatePrice;
+        let stockActual;
+        let remaining;
+        
         //guardar los detalles de una orden
         if(detalles){
             await Promise.all(
                 detalles.map(async (direccion) => {
-                   await db.Orderdetails.create({    
+
+                const searchComponent = await db.Component.findAll({
+                    where: {
+                        id:direccion.componentsId,
+                    },
+                        include: ['devices'],
+                    });
+
+                    //let resultado = numero1 + numero2;
+                    searchComponent.forEach(item => {
+                        //console.log(item.price);
+
+                        // Mas operaciones
+                        moveDatePrice = item.price;
+                        stockActual = item.stock;
+                        // let resultadoSuma = parseFloat(moveDatePrice) + 11;
+                        // console.log(resultadoSuma);
+                        // console.log(stockActual + 11);
+                        return moveDatePrice,stockActual
+                        });
+
+
+                    //Obtener el stock final
+                    let stock = stockActual - direccion.quantityComponent; //stock actual menos la cantidad de componentes seleccionada
+                    let amountTotal = parseFloat(moveDatePrice) * direccion.quantityComponent
+
+                    ///console.log("CANTIDAD TOTAL ="+ amountTotal)
+                    /*await db.Component.update({ 
+                        stock:stockFinal
+                    },{ where: {
+                        id:direccion.componentsId,
+                    },
+                    include: ['devices','orderdetail'],
+                    });
+                */
+                    await db.Orderdetails.create({    
                         ordersId:newIdOrden.id,
                         componentsId:direccion.componentsId,
-                        amountTotal:direccion.amountTotal,
+                        amountTotal, //se agrega en automatico
                         quantityComponent:direccion.quantityComponent,
-                        unitPrice:direccion.unitPrice
-                     });      
+                        unitPrice:moveDatePrice //se agrega en automatico
+                     });  
+
+
+                    const actualizarStock = await db.Component.update({stock}, {
+                        where: { id:direccion.componentsId },
+                      });
                     }
                 ))
                 
         }
 
+        // Calcula el monto total de los detalles de la orden
+        const totalAmount = await db.Orderdetails.sum('amountTotal', {
+        where: {
+            ordersId: newIdOrden.id, 
+        },
+        });
+
+        
+        if(advancePay > 0){
+            remaining = totalAmount - advancePay
+        }else{
+            remaining = totalAmount - 0
+        }
+
+        // Agrega el monto total al campo 'fullPay' de la orden generada
+        newIdOrden.fullPay = totalAmount;
+        newIdOrden.remainingPay = remaining
+
+
+
+        await newIdOrden.save();
+
 
         res.json({
-            newIdOrden,
+            newIdOrden,newState,
             message: 'La orden se registro correctamente'
         });
 

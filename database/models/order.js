@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       date: {
-        type: DataTypes.DATETIME,
+        type: DataTypes.DATE,
         allowNull: true,
         defaultValue: DataTypes.NOW,
       },
@@ -127,11 +127,12 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Order",
     }
   );
-
+/*
   Order.beforeUpdate((order) => {
     if(order.advancePay > 0) {
       order.remainingPay = order.fullPay - order.advancePay
     }
-  })
+  })*/
 
   return Order;
+};
