@@ -29,22 +29,17 @@ module.exports = (sequelize, DataTypes) => {
   
   Component.init({
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(40),
       allowNull: false,
       validate: {
         //El nombre no permite el campo nulo o vacio
         notNull: {
           msg: 'El nombre es obligatorio'
         },
-        //El nombre solo permite letras, y no numeros
-        // is: {
-        //   args: [/^[0-9a-z áéíóú , . A-Z /\ +- \s]+$/i ],
-        //   msg: "El nombre debe de contener solo letras"
-        // }
       }
     },
     price: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         //El price no permite el campo nulo o vacio
@@ -59,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     stock: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         //El stock no permite el campo nulo o vacio
