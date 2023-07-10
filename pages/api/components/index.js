@@ -15,87 +15,85 @@ export default function handler(req,res) {
     }
 }
 
-const componentsList = async (req, res) => {
-    try {
-        //leer el component a flitrar
-        const { id } = req.query;
-
-        //leer las components
-        let components = [];
-        if (id) {
-            components = await db.Component.findAll({
-                where:{
-                    id,
-                },
-            });
-        } else {
-            components = await db.Component.findAll({
-            }); 
-        }
-        return res.json(components);
-    } catch(error){
-        console.log(error);
-        return res.status(400).json(
-            {
-                error: true,
-                message:`Ocurrió un error al procesar la petición: ${error.message}`
-            }
-        )
-    }
-}
-
 // const componentsList = async (req, res) => {
 //     try {
-//         //leer la categoria a filtrar
-//         const { categoryId } = req.query;
-//         //leer los components
-//         let components = [];
-//         if (categoryId) {
-//             components = await db.Device.findAll({
-//                 where: {
-//                         categoryId,
-//                 },
-//                 include: ['category'],
-//             });
-//         } 
-        
-//         else {
-//             components = await db.Component.findAll({
-//                 include: ['category'],
-//             })
-//         }
+//         //leer el component a flitrar
+//         const { id } = req.query;
 
+//         //leer las components
+//         let components = [];
+//         if (id) {
+//             components = await db.Component.findAll({
+//                 where:{
+//                     id,
+//                 },
+//             });
+//         } else {
+//             components = await db.Component.findAll({
+//             }); 
+//         }
 //         return res.json(components);
-//     } catch(error) {
-//         console.log(error)
+//     } catch(error){
+//         console.log(error);
 //         return res.status(400).json(
 //             {
 //                 error: true,
-//                 message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+//                 message:`Ocurrió un error al procesar la petición: ${error.message}`
 //             }
 //         )
-    
 //     }
 // }
 
-const componentsDelete = async (req, res) => {
+const componentsList = async (req, res) => {
     try {
-        //leer la categoria a filtrar
-        const { componentSelected } = req.query;        
-        //leer los Book
+        //leer el id del dispositivo
+        const { deviceId } = req.query;
+        //leer los components
         let components = [];
-        if (componentSelected) {
-            components = await db.Component.destroy({
+        if (deviceId) {
+            components = await db.Component.findAll({
                 where: {
-                    id: componentSelected
-            },
-                include: ['category'],
+                    deviceId,
+                },
+                include: ['devices'],
             });
         } 
         
         else {
             components = await db.Component.findAll({
-                include: ['category'],
+                include: ['devices'],
+            })
+        }
+
+        return res.json(components);
+    } catch(error) {
+        console.log(error)
+        return res.status(400).json(
+            {
+                error: true,
+                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+            }
+        )
+    
+    }
+}
+
+const componentsDelete = async (req, res) => {
+    try {
+        //leer 
+        const { componentSelected } = req.query;        
+        //leer los components
+        let components = [];
+        if (componentSelected) {
+            components = await db.Component.destroy({
+                where: {
+                    id: componentSelected
+                },
+            });
+        } 
+        
+        else {
+            components = await db.Component.findAll({
             })
         }
         return res.json(components);
@@ -119,7 +117,7 @@ const componentsUpdate = async (req, res) => {
         const { name } = req.query;
         const { price } = req.query;
         const { stock } = req.query;
-        const { categoryId } = req.query;
+        const { deviceId } = req.query;
 
 
         const names=()=>{
@@ -149,14 +147,14 @@ const componentsUpdate = async (req, res) => {
         }
         prices()
 
-        const categoriesID=()=>{
-            if(categoryId==null){
+        const devicesID=()=>{
+            if(deviceId==null){
                console.log("no se hizo nada")
-            }else if(categoryId !=null){
-               return  categoryId
+            }else if(deviceId !=null){
+               return  deviceId
             }
         }
-        categoriesID()
+        devicesID()
 
         
         //Proporcion de operadores
@@ -166,23 +164,24 @@ const componentsUpdate = async (req, res) => {
         if (componentsUpdates) {
             
             components = await db.Component.update({
-                name,price,stock,categoryId
+                name,price,stock,deviceId
                 // ...
             }, {  where: {
                 id: componentsUpdates,
         },
-        include: ['category'],
+        // include: ['devices'],
             });
         } 
         
-        
         else {
             components = await db.Component.findAll({
-                include: ['category'],
+                // include: ['devices'],
             })
         }
-
-
+        res.json({
+            components,
+            message: 'El componente se actualizó correctamente'
+        });
         /*Prueba de where o busqueda de ID
             where: {
                 id:6,
