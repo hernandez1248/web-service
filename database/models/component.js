@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'El nombre es obligatorio'
         },
+        //El nombre solo permite letras, y no numeros
+        is: {
+          msg: "El nombre debe de contener solo letras"
+        }
       }
     },
     price: {

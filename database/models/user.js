@@ -92,6 +92,8 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      passwordResetToken: DataTypes.STRING(128),
+      passwordResetExpire: DataTypes.BIGINT
     },
     {
       sequelize,
