@@ -15,57 +15,31 @@ export default function handler(req,res) {
     }
 }
 
-// const componentsList = async (req, res) => {
-//     try {
-//         //leer el component a flitrar
-//         const { id } = req.query;
-
-//         //leer las components
-//         let components = [];
-//         if (id) {
-//             components = await db.Component.findAll({
-//                 where:{
-//                     id,
-//                 },
-//             });
-//         } else {
-//             components = await db.Component.findAll({
-//             }); 
-//         }
-//         return res.json(components);
-//     } catch(error){
-//         console.log(error);
-//         return res.status(400).json(
-//             {
-//                 error: true,
-//                 message:`Ocurrió un error al procesar la petición: ${error.message}`
-//             }
-//         )
-//     }
-// }
-
 const componentsList = async (req, res) => {
     try {
-        //leer el id del dispositivo
-        const { deviceId } = req.query;
-        //leer los components
+        //leer el Component a filtrar
+        const { name } = req.query;
+
+        //Proporcion de operadores
+        const { Op } = require("sequelize");
+        //leer los Component
         let components = [];
-        if (deviceId) {
-            components = await db.Component.findAll({
-                where: {
-                    deviceId,
-                },
-                include: ['devices'],
-            });
-        } 
-        
-        else {
-            components = await db.Component.findAll({
-                include: ['devices'],
-            })
+        if (name) {
+            components = {
+                [Op.or]: [{
+                    name: {//[Op.like]: 'tra%'
+                        [Op.like]: `%${name}%`,
+                    },
+                }],
+            };
         }
 
-        return res.json(components);
+        const componentes = await db.Component.findAll({
+            where: components,
+            include: ['devices','orderdetail'],
+        });
+
+        return res.json(componentes);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
@@ -111,88 +85,43 @@ const componentsDelete = async (req, res) => {
 
 const componentsUpdate = async (req, res) => {
     try {
-        //leer la categoria a filtrar
-        const { componentsUpdates } = req.query;
-        //leer las peticiones a actualizar
-        const { name } = req.query;
-        const { price } = req.query;
-        const { stock } = req.query;
-        const { deviceId } = req.query;
-
-
-        const names=()=>{
-            if(name==null){
-                console.log("no se hizo nada")
-            }else if(name !=null){
-               return  name
-            }
-        }
-        names()
+        //los datos vienen en el req.body
         
-        const stocks=()=>{
-            if(stock==null){
-               console.log("no se hizo nada")
-            }else if(stock !=null){
-               return  stock
-            }
-        }
-        stocks()
+        const {id} = req.body;
+        console.log(req.body);
 
-        const prices=()=>{
-            if(price==null){
-               console.log("no se hizo nada")
-            }else if(price !=null){
-               return  price
-            }
-        }
-        prices()
-
-        const devicesID=()=>{
-            if(deviceId==null){
-               console.log("no se hizo nada")
-            }else if(deviceId !=null){
-               return  deviceId
-            }
-        }
-        devicesID()
-
-        
-        //Proporcion de operadores
-        //const { Op } = require("sequelize");
-        //leer los components
-        let components = [];
-        if (componentsUpdates) {
-            
-            components = await db.Component.update({
-                name,price,stock,deviceId
-                // ...
-            }, {  where: {
-                id: componentsUpdates,
+        //guardar el cliente
+        const components = await db.Component.update({ 
+            ...req.body
+        },{ where: {
+            id,
         },
-        // include: ['devices'],
-            });
-        } 
-        
-        else {
-            components = await db.Component.findAll({
-                // include: ['devices'],
-            })
-        }
+            include: ['devices','orderdetail'],
+        });
+
         res.json({
             components,
-            message: 'El componente se actualizó correctamente'
+            message: 'El componente fue actualizado correctamente'
         });
-        /*Prueba de where o busqueda de ID
-            where: {
-                id:6,
-            }*/
-        return res.json(components);
+
     } catch(error) {
         console.log(error)
+
+        let errors =[];
+        if (error.errors){
+            //extrae la informacion de los campos que tienen error
+            errors = error.errors.map((item) => ({
+                error: item.message,
+                field: item.path,
+
+            }));
+        }
+
         return res.status(400).json(
             {
                 error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+                message: `Ocurrio un error al procesar la peticion: ${error.message}`,
+                errors,      
             }
         )
     
