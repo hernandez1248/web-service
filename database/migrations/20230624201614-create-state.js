@@ -1,4 +1,7 @@
 'use strict';
+
+const { DataTypes } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -18,13 +21,17 @@ module.exports = {
         }
       },
       date: {
-        type: Sequelize.STRING
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(15),
+        allowNull: false,
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(300),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -4,21 +4,15 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class OrderDetails extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+    
     static associate(models) {
       // define association here
-
       models.Orderdetails.belongsTo(models.Order,
         {
           as:'order', //alias parala relacion
           foreignKey: 'ordersId', //pf en products
         }
         );
-
         
       models.Orderdetails.belongsTo(models.Component,
         {
@@ -35,12 +29,43 @@ module.exports = (sequelize, DataTypes) => {
     componentsId: {
       type: DataTypes.INTEGER,
     },
-    amountTotal: DataTypes.STRING,
-    quantityComponent: DataTypes.STRING,
-    unitPrice: DataTypes.STRING,
+    amountTotal: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        isNumeric: {
+          msg: "El monto total debe contener solo números."
+        },
+      },
+    },
+    quantityComponent: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        //La cantidad de componentes no permite agregar campos vacios
+        notNull: {
+          msg: 'La cantidad de componentes es obligatorio'
+        },
+        //La cantidad de componentes solo podra permitir agregar numeros
+        is: {
+          args: [/^[0-9\s]+$/i ],
+          msg: "La cantidad de componentes debe contener solo números enteros."
+        }
+      }
+    },
+    unitPrice:  {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        isNumeric: {
+          msg: "El precio unitario solo permite números."
+        },
+      },
+    }
   }, {
     sequelize,
     modelName: 'OrderDetails',
   });
   return OrderDetails;
 };
+

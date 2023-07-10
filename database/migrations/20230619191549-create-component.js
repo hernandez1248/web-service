@@ -10,15 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(40),
         allowNull: false,
       },
       price: {
-        type: Sequelize.STRING(10),
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       stock: {
-        type: Sequelize.STRING(5),
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       deviceId: {

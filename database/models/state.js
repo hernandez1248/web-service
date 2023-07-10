@@ -16,17 +16,49 @@ module.exports = (sequelize, DataTypes) => {
           as:'order', //alias parala relacion
           foreignKey: 'ordersId', //pf en products
         }
-        );
-
+      );
     }
   }
   State.init({
     ordersId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    date: DataTypes.STRING,
-    status: DataTypes.STRING,
-    description: DataTypes.STRING
+    date: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        //El status no permite el campo nulo o vacio
+        notNull: {
+          msg: 'El status es obligatorio'
+        },
+        //El status solo permite letras, y no numeros
+        is: {
+          args: [/^[A-Z a-z áéíóú]+$/i ],
+          msg: "El status debe de contener solo letras"
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        //El descripción no permite el campo nulo o vacio
+        notNull: {
+          msg: 'La descripción es obligatoria'
+        },
+        //El descripción permite letras, numeros, comas, puntos, acentos, con un limite de 300 caracteres
+        is: {
+          args: [/^[0-9a-z áéíóú , . A-Z\s]+$/i ],
+          msg: "La descripción debe contener menos de 300 caracteres."
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'State',

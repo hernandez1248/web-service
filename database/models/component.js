@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   
   Component.init({
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(40),
       allowNull: false,
       validate: {
         //El nombre no permite el campo nulo o vacio
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     price: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         //El price no permite el campo nulo o vacio
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     stock: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         //El stock no permite el campo nulo o vacio
