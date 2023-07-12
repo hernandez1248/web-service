@@ -19,7 +19,7 @@ const orderList = async (req, res) => {
     try {
         //leer el Order a filtrar
         const { orderId } = req.query;
-        const { queryOrder } = req.query;
+        const { dateRegister } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
@@ -32,17 +32,36 @@ const orderList = async (req, res) => {
             },
                 include: ['servicescategory','device','user','orderdetails','state'],
             });
-        }else if(queryOrder){
-            
-            orders = await db.Order.findAll({
-                where: {
-                    [Op.or]: [{
-                    name: {//[Op.like]: 'tra%'
-                        [Op.like]: queryOrder+'%'
-                    }}
-                ]
-            },
-            });
+        }else if(dateRegister){ 
+                    //Aqui comienza el filtro de fordenes por fecha
+
+                    // Proporcion de operadores
+                    const { Op } = require("sequelize");
+                    const whereFilter = {};
+
+                    if (dateRegister) {
+                    const fecha = new Date(dateRegister);
+
+                    whereFilter.date = {
+                        [Op.and]: [
+                        {
+                            [Op.gte]: db.sequelize.fn('DATE', fecha),                                                                                                                           // Mayor o igual que la fecha especificada (sin tener en cuenta la hora)
+                        },
+                        {
+                            [Op.lt]: db.sequelize.fn('DATE', db.sequelize.literal(`DATE_ADD('${dateRegister}', INTERVAL 1 DAY)`)),                                                              // Menor que la siguiente fecha (24 horas después)
+                        },
+                        ],
+                    };
+                    }
+
+                    // Leer Order
+                    const orders = await db.Order.findAll({
+                    where: whereFilter,
+                    include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
+                    });
+
+                    return res.json(orders);
+
         }else {
             orders = await db.Order.findAll({
                 include: ['servicescategory','device','user','orderdetails','state'],
