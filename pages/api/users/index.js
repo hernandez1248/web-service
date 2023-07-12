@@ -1,4 +1,5 @@
 import db from "database/models/index";
+import { Op } from "sequelize";
 import bcrypt from "bcrypt";
 
 export default function handler(req, res) {
@@ -20,8 +21,30 @@ export default function handler(req, res) {
 // GET: usuarios
 const listUsers = async (req, res) => {
   try {
-    const user = await db.User.findAll({ ...req.body });
-    return res.json(user);
+    const { name } = req.query;
+
+    let whereCondition = {}; 
+
+    if (name) {
+      whereCondition = {
+        [Op.or]: [{
+          name: {
+            [Op.like]: `%${name}%`,
+          },
+        },
+        {
+          lastName: {
+            [Op.like]: `%${name}%`,
+          },
+        }],
+        
+      };
+    }
+    const users = await db.User.findAll({
+      where: whereCondition,
+    });
+
+    return res.json(users);
   } catch (error) {
     return res.status(400).json({
       error: true,
