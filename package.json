@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx mocha test/index.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -24,5 +25,10 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
     "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0"
   }
 }
