@@ -137,6 +137,13 @@ const editUsers = async (req, res) => {
       userData.password = await bcrypt.hash(password, salt);
     }
 
+    if (!userData.name || !userData.lastName || !userData.phone || !userData.email || !userData.password || !userData.rol) {
+      return res.status(400).json({
+        error: true,
+        message: "Faltan campos obligatorios para la actualización.",
+      });
+    }
+
     await db.User.update(userData, {
       where: { id },
     });
@@ -165,8 +172,23 @@ const editUsers = async (req, res) => {
 //DELETE: usuarios
 const deleteUsers = async (req, res) => {
   try {
-    //eliminar los datos del usuario
     const { id } = req.query;
+
+    // Verificar si el usuario existe antes de eliminarlo
+    const user = await db.User.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: true,
+        message: "El usuario no existe.",
+      });
+    }
+
+    // Eliminar el usuario existente
     await db.User.destroy({
       where: {
         id: id,
@@ -180,7 +202,6 @@ const deleteUsers = async (req, res) => {
     console.log(error);
     let errors = [];
     if (error.errors) {
-      //extraer la información de los campos que tienen error
       errors = error.errors.map((item) => ({
         error: item.message,
         field: item.path,
@@ -188,7 +209,7 @@ const deleteUsers = async (req, res) => {
     }
     return res.status(400).json({
       error: true,
-      message: `Ocurrio un error al procesar la información: ${error.message}`,
+      message: `Ocurrió un error al procesar la información: ${error.message}`,
       errors,
     });
   }
