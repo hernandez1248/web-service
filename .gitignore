@@ -38,3 +38,4 @@ next-env.d.ts
 .env
 /test/calc_test.js
 /test/calc.js
+/test/login_test.js
