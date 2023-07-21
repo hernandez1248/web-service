@@ -17,7 +17,7 @@ describe("Registro de componente.", () => {
             deviceId: 1
         })
         .end((err, res) => {
-            // console.log(res.body);
+            console.log(res.body);
             expect(res).to.have.status(200);
             expect(res.body).to.have.property('message');
             done();

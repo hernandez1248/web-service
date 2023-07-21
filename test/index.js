@@ -1,1 +1,1 @@
-require('./components_test');
+require('./components_test'); 

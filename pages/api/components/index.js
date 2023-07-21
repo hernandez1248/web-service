@@ -110,7 +110,6 @@ const componentsDelete = async (req, res) => {
           id
         },
       });
-  
       res.json({
         message: "El componente ha sido eliminado.",
       });
