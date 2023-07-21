@@ -32,6 +32,16 @@ const orderList = async (req, res) => {
             },
                 include: ['servicescategory','device','user','orderdetails','state'],
             });
+
+
+                //console.log(orders);
+                if (Object.keys(orders).length === 0) {
+                    return res.status(404).json({ message: 'Orden no encontrada' });
+                  }
+
+                  return res.json({ orders,message: 'Orden encontrada' });
+                
+
         }else if(dateRegister){ 
                     //Aqui comienza el filtro de fordenes por fecha
 
@@ -60,7 +70,7 @@ const orderList = async (req, res) => {
                     include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
                     });
 
-                    return res.json(orders);
+                    return res.json({ orders,message: 'Orden encontrada' });
 
         }else {
             orders = await db.Order.findAll({
@@ -113,6 +123,13 @@ const orderDelete = async (req, res) => {
             },
                 include: ['servicescategory','device','user','orderdetails','state'],
             });
+
+            
+            if (orders === 0) {
+                return res.status(404).json({ message: 'Orden no encontrada' });
+              }            
+            
+                return res.json({ orders,message: 'Eliminada correctamente' });
         } 
         
         else {
@@ -149,10 +166,27 @@ const orderUpdate = async (req, res) => {
             include: ['servicescategory','device','user','orderdetails','state'],
         });
 
-        res.json({
-            orders,
-            message: 'La orden fue actualizada correctamente'
-        });
+
+        //console.log("///////////////////////////");  
+        const order = orders[0];
+        //console.log(number);
+        /*
+            console.log(orders)
+            if (number === 0) {
+               console.log("no encontradaaaaaaaa");
+              } else if (number ===1) {
+                console.log("si encontradaaaaaaaaaaaaaaaaa");
+              }else{
+                console.log("Anda mal");
+              }
+
+        */
+        //Object.keys(orders).length === 0
+        if (order === 0) {
+            return res.status(404).json({ message: 'La orden seleccionada no fue encontrada' });
+          }
+          
+          return res.json({ orders,message: 'La orden fue actualizada correctamente' });
 
     } catch(error) {
         console.log(error)
