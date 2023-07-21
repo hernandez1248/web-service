@@ -37,3 +37,5 @@ next-env.d.ts
 
 /database/config/*
 .env
+/test/calc_test.js
+/test/calc.js
