@@ -34,17 +34,26 @@ const deviceList = async (req, res) => {
             },
                 include: ['deviceCategory','component','order'],
             });
+
+            //console.log(devices);
+            if (Object.keys(devices).length === 0) {
+                return res.status(404).json({ message: 'Dispositivo no encontrado' });
+                }
+
+                return res.json({ devices,message: 'Dispositivo encontrado' });
         }else if(queryDevice){
             
             devices = await db.Device.findAll({
                 where: {
                     [Op.or]: [{
-                    name: {//[Op.like]: 'tra%'
+                    model: {//[Op.like]: 'tra%'
                         [Op.like]: queryDevice+'%'
                     }}
                 ]
             },
             });
+
+            return res.json({ devices,message: 'Dispositivos encontrado' });
         }else {
             devices = await db.Device.findAll({
                 include: ['deviceCategory','component','order'],
@@ -79,6 +88,14 @@ const deviceDelete = async (req, res) => {
             },
                 include: ['deviceCategory','component','order'],
             });
+            
+
+            
+            if (devices === 0) {
+                return res.status(404).json({ message: 'Dispositivo no encontrado' });
+              }            
+            
+                return res.json({ devices,message: 'Eliminado correctamente' });
         } 
         
         else {
@@ -115,10 +132,13 @@ const deviceUpdate = async (req, res) => {
         include: ['deviceCategory','component','order'],
         });
 
-        res.json({
-            devices,
-            message: 'El dispositivo fue actualizado correctamente'
-        });
+        const device = devices[0];
+
+        if (device === 0) {
+            return res.status(404).json({ message: 'El dispositivo seleccionado no fue encontrado' });
+          }
+          
+          return res.json({ devices,message: 'El dispositivo fue actualizado correctamente' });
 
     } catch(error) {
         console.log(error)
