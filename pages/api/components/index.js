@@ -52,36 +52,83 @@ const componentsList = async (req, res) => {
     }
 }
 
+// const componentsDelete = async (req, res) => {
+//     try {
+//         //leer 
+//         const { componentSelected } = req.query;        
+//         //leer los components
+//         let components = [];
+//         if (componentSelected) {
+//             components = await db.Component.destroy({
+//                 where: {
+//                     id: componentSelected
+//                 },
+//             });
+//         } 
+        
+//         else {
+//             components = await db.Component.findAll({
+//             })
+//         }
+
+//         res.json({
+//             message: 'El componente fue eliminado correctamente'
+//         });
+//     } catch(error) {
+//         console.log(error)
+//         return res.status(400).json(
+//             {
+//                 error: true,
+//                 message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+//             }
+//         )
+    
+//     }
+// }
+
 const componentsDelete = async (req, res) => {
     try {
-        //leer 
-        const { componentSelected } = req.query;        
-        //leer los components
-        let components = [];
-        if (componentSelected) {
-            components = await db.Component.destroy({
-                where: {
-                    id: componentSelected
-                },
-            });
-        } 
-        
-        else {
-            components = await db.Component.findAll({
-            })
-        }
-        return res.json(components);
-    } catch(error) {
-        console.log(error)
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
-            }
-        )
-    
+      const { id } = req.query;
+  
+      // Verificar si el usuario existe antes de eliminarlo
+      const component = await db.Component.findOne({
+        where: {
+          id
+        },
+      });
+  
+      if (!component) {
+        return res.status(404).json({
+          error: true,
+          message: "El componente no existe.",
+        });
+      }
+  
+      // Eliminar el usuario existente
+      await db.Component.destroy({
+        where: {
+          id
+        },
+      });
+      res.json({
+        message: "El componente ha sido eliminado.",
+      });
+    } catch (error) {
+      console.log(error);
+      let errors = [];
+      if (error.errors) {
+        errors = error.errors.map((item) => ({
+          error: item.message,
+          field: item.path,
+        }));
+      }
+      return res.status(400).json({
+        error: true,
+        message: `Ocurrió un error al procesar la información: ${error.message}`,
+        errors,
+      });
     }
-}
+  };
 
 const componentsUpdate = async (req, res) => {
     try {
@@ -91,7 +138,7 @@ const componentsUpdate = async (req, res) => {
         console.log(req.body);
 
         //guardar el cliente
-        const components = await db.Component.update({ 
+        await db.Component.update({ 
             ...req.body
         },{ where: {
             id,
@@ -100,7 +147,6 @@ const componentsUpdate = async (req, res) => {
         });
 
         res.json({
-            components,
             message: 'El componente fue actualizado correctamente'
         });
 
