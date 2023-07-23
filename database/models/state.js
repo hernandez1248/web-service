@@ -25,9 +25,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: true,
       defaultValue: DataTypes.NOW,
+      validate: {
+        //La fecha solo permite el siguiente formato
+        is: {
+          args: [/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/i ],
+          msg: "La fecha de nacimiento debe tener el formato: dd/mm/aaaa"
+        }
+      }
     },
     status: {
       type: DataTypes.STRING,
