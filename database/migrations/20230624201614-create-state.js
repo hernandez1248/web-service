@@ -21,8 +21,8 @@ module.exports = {
         }
       },
       date: {
-        type: Sequelize.DATE,
-        allowNull: false,
+        type: Sequelize.STRING(22),
+        allowNull: true,
         defaultValue: DataTypes.NOW,
       },
       status: {
