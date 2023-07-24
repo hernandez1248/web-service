@@ -4,10 +4,8 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const url = 'http://localhost:3000/api'//http://localhost:3000/api/orders
+const url = 'http://localhost:3000/api'
 
-
-describe("Modulo de orders", () => {
     before(() => {
         console.log("Probando el funcionamiento del CRUD de Orders");
    })
@@ -21,7 +19,7 @@ describe("Modulo de orders", () => {
                 deviceId:"3",
                 userId:"1",
                 fullName:"Marivel Herreria",
-                phone:"1234567890",
+                phone:"2431166982",
                 color:"rojo",
                 observations:"El dispositivo trae la pantalla estrellada, además no funciona la bateria, al igual que su camara",
                 advancePay:"300",
@@ -44,7 +42,7 @@ describe("Modulo de orders", () => {
 
             .end((err,res) => {
                 console.log(res.body);
-                //console.log( res.body.newIdOrden);
+                console.log( res.body.newIdOrden);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('newIdOrden');            
                 expect(res.body).to.have.property('newState');
@@ -83,7 +81,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -98,7 +96,7 @@ describe("Modulo de orders", () => {
                 deviceId:"3",
                 userId:"1",
                 //fullName:"Marivell Herreria",
-                phone:"9389",
+                phone: "2431189082",
                 color:"rojo",
                 observations:"El dispositivo trae la pantalla estrellada, además no funciona la bateria, al igual que su camara",
                 advancePay:"300",
@@ -120,7 +118,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -135,7 +133,7 @@ describe("Modulo de orders", () => {
             .query({ orderId: "272" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('orders');
                 //expect(res.body.orders).to.be.an('array').with.lengthOf(1);
@@ -151,7 +149,7 @@ describe("Modulo de orders", () => {
             .query({ orderId: "999" })
 
             .end((err, res) => {
-            console.log(res.body);
+            //console.log(res.body);
             expect(res).to.have.status(404);
             expect(res.body).to.have.property('message');
             done();
@@ -164,7 +162,7 @@ describe("Modulo de orders", () => {
             .query({ dateRegister: "2023-07-03" })
 
             .end((err, res) => {
-                console.log(res.body)
+                //console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('orders');
                 expect(res.body).to.have.property('message');
@@ -181,7 +179,7 @@ describe("Modulo de orders", () => {
             .query({ orderSelected: "160" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -194,7 +192,7 @@ describe("Modulo de orders", () => {
             .query({ orderSelected: "999888" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('message');
                 done();
@@ -207,7 +205,7 @@ describe("Modulo de orders", () => {
             .query({ orderSelected: ["166", "172", "168"] })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -231,7 +229,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -248,7 +246,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('message');
                 done();
@@ -265,7 +263,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {            
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -279,5 +277,4 @@ describe("Modulo de orders", () => {
     after(() => {
         console.log("Fin del test de Orders")
     })
-})
 
