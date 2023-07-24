@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 const url = 'http://localhost:3000/api'//http://localhost:3000/api/device
 
 
-describe("Modulo de orders", () => {
+describe("Modulo de Devices", () => {
     before(() => {
         console.log("Probando el funcionamiento del CRUD de Devices");
    })
@@ -110,7 +110,7 @@ describe("Modulo de orders", () => {
         });
     })
 
-    describe("Eliminar orden.", () => {
+    describe("Eliminar dispositivo.", () => {
         
         it("Debe eliminar un dispositivo existente", (done) => {
             chai.request(url)
