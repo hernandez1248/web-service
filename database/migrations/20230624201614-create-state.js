@@ -25,6 +25,7 @@ module.exports = {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
+      
       status: {
         type: Sequelize.STRING(15),
         allowNull: false,
