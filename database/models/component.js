@@ -36,8 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'El nombre es obligatorio'
         },
-        //El nombre solo permite letras, y no numeros
+        //El nombre  solo permite letras, y no numeros
         is: {
+          args: [/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9/\s+-]+$/i ],
           msg: "El nombre debe de contener solo letras"
         }
       }
@@ -74,6 +75,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     deviceId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        //El price no permite el campo nulo o vacio
+        notNull: {
+          msg: 'El dispositivo es obligatorio'
+        }
+      }
     },
   }, {
     sequelize,
