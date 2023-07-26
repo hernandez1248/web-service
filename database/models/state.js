@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: DataTypes.NOW,
     },
+    
     status: {
       type: DataTypes.STRING,
       allowNull: false,
