@@ -4,10 +4,8 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const url = 'http://localhost:3000/api'//http://localhost:3000/api/orders
+const url = 'http://localhost:3000/api'
 
-
-describe("Modulo de orders", () => {
     before(() => {
         console.log("Probando el funcionamiento del CRUD de Orders");
    })
@@ -18,32 +16,25 @@ describe("Modulo de orders", () => {
             .post('/orders')
             .send({
                 servicesId:"2",
-                deviceId:"3",
+                deviceId:"1",
                 userId:"1",
                 fullName:"Marivel Herreria",
-                phone:"1234567890",
+                phone:"2431166982",
                 color:"rojo",
                 observations:"El dispositivo trae la pantalla estrellada, además no funciona la bateria, al igual que su camara",
                 advancePay:"300",
             
                 detalles:[        
-                    {
-                        "componentsId": 2,
-                        "quantityComponent":1
-                    },
+                    
                     {
                         "componentsId": 1,
                         "quantityComponent":1
                     },
-                    {
-                        "componentsId": 3,
-                        "quantityComponent":1
-                    }
                 ]
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 //console.log( res.body.newIdOrden);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('newIdOrden');            
@@ -83,7 +74,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -98,7 +89,7 @@ describe("Modulo de orders", () => {
                 deviceId:"3",
                 userId:"1",
                 //fullName:"Marivell Herreria",
-                phone:"9389",
+                phone: "2431189082",
                 color:"rojo",
                 observations:"El dispositivo trae la pantalla estrellada, además no funciona la bateria, al igual que su camara",
                 advancePay:"300",
@@ -120,7 +111,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -132,14 +123,14 @@ describe("Modulo de orders", () => {
         it("Debe visualizar una orden existente", (done) => {
             chai.request(url)
             .get('/orders')
-            .query({ orderId: "272" })
+            .query({ orderId: "17" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('orders');
                 //expect(res.body.orders).to.be.an('array').with.lengthOf(1);
-                expect(res.body.orders[0]).to.have.property('id', 272);
+                expect(res.body.orders[0]).to.have.property('id', 17);
                 expect(res.body.orders[0]).to.have.property('fullName');
                 done();
             });
@@ -151,7 +142,7 @@ describe("Modulo de orders", () => {
             .query({ orderId: "999" })
 
             .end((err, res) => {
-            console.log(res.body);
+            //console.log(res.body);
             expect(res).to.have.status(404);
             expect(res.body).to.have.property('message');
             done();
@@ -164,7 +155,7 @@ describe("Modulo de orders", () => {
             .query({ dateRegister: "2023-07-03" })
 
             .end((err, res) => {
-                console.log(res.body)
+                //console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('orders');
                 expect(res.body).to.have.property('message');
@@ -178,10 +169,10 @@ describe("Modulo de orders", () => {
         it("Debe eliminar una orden existente", (done) => {
             chai.request(url)
             .delete('/orders')
-            .query({ orderSelected: "160" })
+            .query({ orderSelected: "18" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -194,7 +185,7 @@ describe("Modulo de orders", () => {
             .query({ orderSelected: "999888" })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('message');
                 done();
@@ -204,10 +195,10 @@ describe("Modulo de orders", () => {
         it("Debe eliminar múltiples órdenes a la vez", (done) => {
             chai.request(url)
             .delete('/orders')
-            .query({ orderSelected: ["166", "172", "168"] })
+            .query({ orderSelected: ["20", "19"] })
 
             .end((err, res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -222,7 +213,7 @@ describe("Modulo de orders", () => {
             chai.request(url)
             .patch('/orders')
             .send({
-                id:124,
+                id:13,
                 fullName:"Gissel Garcia",
                 phone:"2431256890",
                 color:"Verde",
@@ -231,7 +222,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
                 done();
@@ -248,7 +239,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('message');
                 done();
@@ -265,7 +256,7 @@ describe("Modulo de orders", () => {
             })
 
             .end((err,res) => {            
-                console.log(res.body);
+                //console.log(res.body);
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
                 done();
@@ -273,11 +264,7 @@ describe("Modulo de orders", () => {
         })
     })
 
-
-    
-
     after(() => {
         console.log("Fin del test de Orders")
     })
-})
 
