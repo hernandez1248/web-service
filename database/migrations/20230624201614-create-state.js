@@ -21,10 +21,11 @@ module.exports = {
         }
       },
       date: {
-        type: Sequelize.STRING(22),
+        type: Sequelize.DATE,
         allowNull: true,
         defaultValue: DataTypes.NOW,
       },
+
       status: {
         type: Sequelize.STRING(15),
         allowNull: false,
