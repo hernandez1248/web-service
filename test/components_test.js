@@ -187,7 +187,7 @@ describe("CRUD de Componentes.", () => {
     it("Debe eliminar el registro de un componente", (done) => {
       chai
         .request(url)
-        .delete("/components?id=5")
+        .delete("/components?id=11")
         .end((err, res) => {
           // console.log(res.body);
           expect(res).to.have.status(200);

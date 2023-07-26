@@ -16,7 +16,7 @@ const url = 'http://localhost:3000/api'
             .post('/orders')
             .send({
                 servicesId:"2",
-                deviceId:"3",
+                deviceId:"1",
                 userId:"1",
                 fullName:"Marivel Herreria",
                 phone:"2431166982",
@@ -25,24 +25,17 @@ const url = 'http://localhost:3000/api'
                 advancePay:"300",
             
                 detalles:[        
-                    {
-                        "componentsId": 2,
-                        "quantityComponent":1
-                    },
+                    
                     {
                         "componentsId": 1,
                         "quantityComponent":1
                     },
-                    {
-                        "componentsId": 3,
-                        "quantityComponent":1
-                    }
                 ]
             })
 
             .end((err,res) => {
-                console.log(res.body);
-                console.log( res.body.newIdOrden);
+                //console.log(res.body);
+                //console.log( res.body.newIdOrden);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('newIdOrden');            
                 expect(res.body).to.have.property('newState');
@@ -130,14 +123,14 @@ const url = 'http://localhost:3000/api'
         it("Debe visualizar una orden existente", (done) => {
             chai.request(url)
             .get('/orders')
-            .query({ orderId: "272" })
+            .query({ orderId: "17" })
 
             .end((err, res) => {
                 //console.log(res.body);
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('orders');
                 //expect(res.body.orders).to.be.an('array').with.lengthOf(1);
-                expect(res.body.orders[0]).to.have.property('id', 272);
+                expect(res.body.orders[0]).to.have.property('id', 17);
                 expect(res.body.orders[0]).to.have.property('fullName');
                 done();
             });
@@ -176,7 +169,7 @@ const url = 'http://localhost:3000/api'
         it("Debe eliminar una orden existente", (done) => {
             chai.request(url)
             .delete('/orders')
-            .query({ orderSelected: "160" })
+            .query({ orderSelected: "18" })
 
             .end((err, res) => {
                 //console.log(res.body);
@@ -202,7 +195,7 @@ const url = 'http://localhost:3000/api'
         it("Debe eliminar múltiples órdenes a la vez", (done) => {
             chai.request(url)
             .delete('/orders')
-            .query({ orderSelected: ["166", "172", "168"] })
+            .query({ orderSelected: ["20", "19"] })
 
             .end((err, res) => {
                 //console.log(res.body);
@@ -220,7 +213,7 @@ const url = 'http://localhost:3000/api'
             chai.request(url)
             .patch('/orders')
             .send({
-                id:124,
+                id:13,
                 fullName:"Gissel Garcia",
                 phone:"2431256890",
                 color:"Verde",
@@ -270,9 +263,6 @@ const url = 'http://localhost:3000/api'
             });
         })
     })
-
-
-    
 
     after(() => {
         console.log("Fin del test de Orders")

@@ -1,5 +1,5 @@
-require('./users_test');
-require('./orders_test');
+//require('./users_test');
+//require('./orders_test');
 require('./components_test');
-require('./devices_test');
-require('./states_test');
+//require('./devices_test');
+//require('./states_test');

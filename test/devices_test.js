@@ -121,7 +121,7 @@ describe("CRUD de Dispositivos", () => {
         .request(url)
         .patch("/device")
         .send({
-          id: 6,
+          id: 11,
           model: "Alcatel YUHYUHYU",
           brand: "Alca",
         })
@@ -176,7 +176,7 @@ describe("CRUD de Dispositivos", () => {
       chai
         .request(url)
         .delete("/device")
-        .query({ deviceSelected: "10" })
+        .query({ deviceSelected: "12" })
 
         .end((err, res) => {
           //console.log(res.body);
@@ -204,7 +204,7 @@ describe("CRUD de Dispositivos", () => {
       chai
         .request(url)
         .delete("/device")
-        .query({ deviceSelected: ["6", "9"] })
+        .query({ deviceSelected: ["13", "14"] })
 
         .end((err, res) => {
           //console.log(res.body);

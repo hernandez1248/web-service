@@ -11,11 +11,11 @@ describe("CRUD de usuarios.", () => {
       chai.request(url)
       .post("/users")
       .send({
-        name: "Angel",
-        lastName: "Flores",
+        name: "Ricardo",
+        lastName: "bmkfk",
         phone: 2431192311,
-        email: "flores@gmail.com",
-        password: "flores12",
+        email: "mnfm12@gmail.com",
+        password: "mendoza12",
         rol: "empleado",
       })
       .end((err, res) => {
@@ -160,7 +160,7 @@ describe("CRUD de usuarios.", () => {
   describe('Eliminar un usuario', () => {
     it("Debe eliminar un usuario correctamente", (done) => {
       chai.request(url)
-        .delete("/users?id=57")
+        .delete("/users?id=67")
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.have.property("message");
