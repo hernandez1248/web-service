@@ -112,14 +112,19 @@ const statesUpdate = async (req, res) => {
         const states = await db.State.update({ 
             ...req.body
         },{ where: {
-            id
+            id,
         },
             include: ['order'],
         });
 
-        res.json({
+        const state = states[0];
+        if (state === 0) {
+            return res.status(404).json({ message: 'El estado seleccionadap no fue encontrada' });
+          }
+
+        return res.json({
             states,
-            message: 'El estado fue actualizado correctamente'
+            message: "El estado fue actualizado correctamente"
         });
 
     } catch(error) {
@@ -148,36 +153,44 @@ const statesUpdate = async (req, res) => {
 
 const statesDelete = async (req, res) => {
     try {
-        //leer la categoria a filtrar
-        const { stateSelected } = req.query;        
-        //leer los state
-        let states = [];
-        if (stateSelected) {
-            states = await db.State.destroy({
-                where: {
-                    id: stateSelected
-            },
-                    include: ['order'],
-            });
-        } 
-        
-        else {
-            states = await db.State.findAll({
-                    include: ['order'],
-            })
-        }
-        res.json({
-            states,
-            message: 'El estado se eliminó correctamente'
+      const { id } = req.query;
+  
+      // Verificar si el usuario existe antes de eliminarlo
+      const state = await db.State.findOne({
+        where: {
+          id
+        },
+      });
+  
+      if (!state) {
+        return res.status(404).json({
+          error: true,
+          message: "El estado no existe.",
         });
-    } catch(error) {
-        console.log(error)
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
-            }
-        )
-    
+      }
+  
+      // Eliminar el usuario existente
+      await db.State.destroy({
+        where: {
+          id
+        },
+      });
+      res.json({
+        message: "El estado ha sido eliminado.",
+      });
+    } catch (error) {
+      console.log(error);
+      let errors = [];
+      if (error.errors) {
+        errors = error.errors.map((item) => ({
+          error: item.message,
+          field: item.path,
+        }));
+      }
+      return res.status(400).json({
+        error: true,
+        message: `Ocurrió un error al procesar la información: ${error.message}`,
+        errors,
+      });
     }
-}
+  };
