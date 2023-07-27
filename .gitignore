@@ -34,7 +34,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/database/config/*
+# database/config/*
 .env
 /test/calc_test.js
 /test/calc.js
