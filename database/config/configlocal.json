@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "root",
+    "password": "mendoza1",
+    "database": "db_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "admin",
+    "password": "lb6p0Snu",
+    "database": "9a_23",
+    "host": "mysql-137628-0.cloudclusters.net",
+    "port": "10053",
+    "dialect": "mysql"
+  }
+}
