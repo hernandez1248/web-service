@@ -59,6 +59,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      image: {
+        type: DataTypes.STRING(1024),
+        allowNull: false,
+        validate: {
+          isUrl: {
+            msg: "La URL del avatar no es válida. Debe ser una URL completa.",
+          },
+        },
+      },
       email: {
         type: DataTypes.STRING(128),
         allowNull: false,
@@ -87,8 +96,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "empleado",
         validate: {
           isIn: {
-            args: [["admin", "empleado"]],
-            msg: "El rol debe ser 'admin' o 'empleado'",
+            args: [["administrador", "empleado"]],
+            msg: "El rol debe ser 'administrador' o 'empleado'",
           },
         },
       },

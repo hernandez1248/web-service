@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     await user.save();
 
     res.json({
-        message: 'La contraseña ha sido guardada correctamente.',
+        message: 'La contraseña ha sido actualizada correctamente.',
     });
   } catch (error) {
     console.log(error);
