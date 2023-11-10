@@ -11,12 +11,13 @@ export const checkUserEmailPassword = async (_email, password) => {
     return null;
   }
 
-  const { id, name, email, rol, } = user;
+  const { id, name, email, image, rol, } = user;
 
   return {
     id,
     name,
     email,
+    image,
     rol,
   };
 };

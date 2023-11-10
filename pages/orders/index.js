@@ -1,119 +1,71 @@
-////////////POR AHORA NO ACTUALIZARLO
-import { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import apiClient from 'apiClient';
+import * as React from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import { useEffect } from "react";
+import { Button, Grid } from "@mui/material";
+import { useState } from "react";
+import apiClient from "@/apiClient";
+import CardOrders from "@/components/cards/cardOrders";
+import ModalContentAddOrder from "@/components/modals/addOrders";
 
-const RegisterPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [detalles, setDetalles] = useState([]);
+const OrdersView = () => {
 
-  const handleDetalleChange = (event, index, field) => {
-    const value = event.target.value;
-    const updatedDetalles = [...detalles];
+  const [orders, setOrders] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Actualizar el valor correspondiente del campo en el detalle de compra
-    updatedDetalles[index] = {
-      ...updatedDetalles[index],
-      [field]: value,
-    };
+  const deleteOrder = (index) => {
+      //Clonar Orders
+      const ordersCopy = [...orders];
+      ordersCopy.splice(index,1);
+      //Actualizar el estado orders con la nueva lista
+      setOrders(ordersCopy);
 
-    setDetalles(updatedDetalles);
-  };
-
-  const agregarDetalle = () => {
-    setDetalles([...detalles, {}]);
-  };
-
-  const onSubmit = (data) => {
-    const datosFormulario = {
-      ...data,
-      detalles,
-    };
-
-    apiClient.post('/api/orders', datosFormulario)
+  }
+  useEffect(() => {
+    apiClient.get("./api/orders")
       .then((response) => {
-        alert(response.data.message);
+        setOrders(response.data);
       })
       .catch((error) => {
-        alert(error.response.data.message);
-
-        if (error.response.data.errors) {
-          error.response.data.errors.forEach((errorItem) => {
-            setError(errorItem.field, {
-              type: "validation",
-              message: errorItem.error
-            });
-          });
-        }
+        console.error("Error al obtener los datos de los usuarios:", error);
       });
-  };
+  }, []);
+  console.log(orders);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  }
+  
+  const renderOrders = () => {
+     return orders.map( (order, index) => (
+       <Grid item xs={12} lg={4} xl={12} key={order.id}>
+       <CardOrders
+       index = {index}
+       order = {order}
+       onDelete = {deleteOrder}                
+       ruteDirection = {`/orders/${order.id}`}
+      />   
+     </Grid>
+     ))
+ };
+ 
   return (
-    // Resto del código del componente...
-
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-      {/* Campos existentes... */}
-      <TextField
-            margin="normal"
-            label="Nombre completo"
-            id="fullName"
-            fullWidth
-            {
-              ...register('fullName',
-              {
-                  required: '*Este campo es obligatorio.',
-                  pattern: {
-                      value: /^[A-Z a-z áéíóú]+$/i,
-                      message: 'No es un nombre de usuario valido.'
-                  }
-              })
-            } 
-          />
-
-
-      {/* Campos de detalle de compra */}
-      {detalles.map((detalle, index) => (
-        <div key={index}>
-
-          <TextField
-            margin="normal"
-            label="Producto ID"
-            fullWidth
-            value={detalle.componentsId || ''}
-            onChange={(e) => handleDetalleChange(e, index, 'componentsId')}
-          />
-
-          <TextField
-            margin="normal"
-            label="Cantidad de componentes"
-            fullWidth
-            value={detalle.quantityComponent || ''}
-            onChange={(e) => handleDetalleChange(e, index, 'quantityComponent')}
-          />
-
-          <TextField
-            margin="normal"
-            label="Precio Unitario"
-            fullWidth
-            value={detalle.unitPrice || ''}
-            onChange={(e) => handleDetalleChange(e, index, 'unitPrice')}
-          />
-        </div>
-      ))}
-
-      <Button type="button" onClick={agregarDetalle} fullWidth>
-        Agregar Detalle
-      </Button>
-
-      <Button type="submit"  fullWidth>
-        Guardar
-      </Button>
-
-      {/* Resto del código del formulario... */}
+    <Box>
+      <div>
+        Hola, aqui va la interfaz de ordenes
+      </div>
+      <Button onClick={handleOpenModal}>Agregar orden</Button>
+      
+      <Grid container spacing={2}>
+          {renderOrders()}
+      </Grid>
+      <ModalContentAddOrder open={isModalOpen} handleClose={handleCloseModal} />
     </Box>
-    
-  );
-};
+  )
+}
 
-export default RegisterPage;
+export default OrdersView;

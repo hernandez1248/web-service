@@ -21,6 +21,10 @@ module.exports = {
         type: Sequelize.STRING(16),
         allowNull: false,
       },
+      image: {
+        type: Sequelize.STRING(1024),
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING(128),
         allowNull: false,
@@ -31,7 +35,7 @@ module.exports = {
         allowNull: false,
       },
       rol: {
-        type: Sequelize.STRING(16),
+        type: Sequelize.STRING(256),
         allowNull: false,
         defaultValue:'empleado',
       },

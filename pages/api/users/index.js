@@ -22,10 +22,26 @@ export default function handler(req, res) {
 const listUsers = async (req, res) => {
   try {
     const { name } = req.query;
-
+    const { userId } = req.query;
     let whereCondition = {}; 
 
-    if (name) {
+    let users = []
+
+  if (userId) {
+      users = await db.User.findAll({
+      where: {
+          id:userId,
+      },
+          //include: ['deviceCategory','component','order'],
+      });
+
+      //console.log(users);
+      if (Object.keys(users).length === 0) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+          }
+
+          return res.json({ users,message: 'Usuario encontrado' });
+  }else if (name) {
       whereCondition = {
         [Op.or]: [{
           name: {
@@ -40,7 +56,7 @@ const listUsers = async (req, res) => {
         
       };
     }
-    const users = await db.User.findAll({
+     users = await db.User.findAll({
       where: whereCondition,
     });
 
@@ -123,26 +139,26 @@ const editUsers = async (req, res) => {
     const { id } = req.query;
     const { password, ...userData } = req.body;
 
-    if (password && password.length < 8) {
-      return res.status(400).json({
-        error: true,
-        message: "La contraseña debe tener una longitud >= 8 caracteres.",
-        field: "password",
-      });
-    }
+    // if (password && password.length < 8) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     message: "La contraseña debe tener una longitud >= 8 caracteres.",
+    //     field: "password",
+    //   });
+    // }
 
-    // Validar si se proporciona una nueva contraseña y cifrarla
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      userData.password = await bcrypt.hash(password, salt);
-    }
+    // // Validar si se proporciona una nueva contraseña y cifrarla
+    // if (password) {
+    //   const salt = await bcrypt.genSalt(10);
+    //   userData.password = await bcrypt.hash(password, salt);
+    // }
 
-    if (!userData.name || !userData.lastName || !userData.phone || !userData.email || !userData.password || !userData.rol) {
-      return res.status(400).json({
-        error: true,
-        message: "Faltan campos obligatorios para la actualización.",
-      });
-    }
+    // if (!userData.name || !userData.lastName || !userData.phone || !userData.email || !userData.password || !userData.rol) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     message: "Faltan campos obligatorios para la actualización.",
+    //   });
+    // }
 
     await db.User.update(userData, {
       where: { id },

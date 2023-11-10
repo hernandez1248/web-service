@@ -1,11 +1,17 @@
+import * as React from "react";
+import CssBaseline from "@mui/material/CssBaseline";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import apiClient from "@/apiClient";
-import { Box, Button, Container, Grid, Paper, TextField, Typography, } from "@mui/material";
+import { Button, Container, Grid, Paper, TextField, Typography, } from "@mui/material";
 import { useState } from "react";
 import db from "database/models/index";
 import { Op } from "sequelize";
 import Head from "next/head";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const RecoverPassword = (props) => {
   const { token } = props;
@@ -14,7 +20,12 @@ const RecoverPassword = (props) => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [mostrar, setMostrar] = useState(props.token ? "form" : "result");
-  const [showPwd, setShowPwd] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
 
   const handleChange = (e) => {
     setPassword(e.target.value);
@@ -38,8 +49,7 @@ const RecoverPassword = (props) => {
     e.preventDefault();
 
     //realizar envío de nueva contraseña
-    apiClient
-      .post("/password/change", { password, token })
+    apiClient.post("/api/password/change", { password, token })
       .then((response) => {
         console.log(response.data);
         setMostrar("result");
@@ -58,6 +68,8 @@ const RecoverPassword = (props) => {
     if (mostrar === "form") {
       return (
         //Formulario
+
+        
         <form onSubmit={handleRecovery} noValidate>
           <Grid
             container
@@ -65,65 +77,53 @@ const RecoverPassword = (props) => {
             sx={{ display: "flex", justifyContent: "center" }}
           >
             <Grid item xs={12} md={8} sx={{ my: 3 }}>
-              <Typography
-                color="primary"
-                variant="h5"
-                mt={6}
-                sx={{ fontWeight: "bold" }}
-              >
-                Ingresa la nueva contraseña
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <TextField
-                  margin="normal"
-                  variant="standard"
-                  required
-                  fullWidth
-                  name="password"
-                  type={showPwd ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={handleChange}
-                  error={!!passwordError}
-                  helperText={passwordError}
-                />
-                <div
-                  onClick={() => setShowPwd(!showPwd)}
-                >
-                  {showPwd ? (
-                    <VisibilityIcon className="eyeFill" />
-                  ) : (
-                    <VisibilityOffIcon className="eyeFill" />
-                  )}
-                </div>
-              </Box>
-              <Typography
-                color="primary"
-                variant="h5"
-                mt={6}
-                sx={{ fontWeight: "bold" }}
-              >
-                Confirmar contraseña
-              </Typography>
-              <TextField
-                margin="normal"
-                variant="standard"
-                required
-                fullWidth
-                name="password"
-                type="password"
-                id="password"
-                value={confirmPassword}
-                onChange={handleConfirmChange}
-                error={!!passwordError}
-                helperText={passwordError}
-              />
+            
+          <Typography component="h4" color="primary" variant="h5" sx={{textAlign: 'center', fontWeight: 'bold'}}>
+              Recuperar Contraseña
+          </Typography>
+          <TextField
+            margin="normal"
+            fullWidth
+            name="password"
+            label="Nueva contraseña"
+            type={showPassword ? "text" : "password"}
+            id="password"
+            value={password}
+            onChange={handleChange}
+            error={!!passwordError}
+            helperText={passwordError}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="Toggle password visibility"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            label="Confirmar contraseña"
+            name="password"
+            type="password"
+            id="password"
+            value={confirmPassword}
+            onChange={handleConfirmChange}
+            error={!!passwordError}
+            helperText={passwordError}
+            />
             </Grid>
           </Grid>
+          
           <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
             <Button
               type="submit"
-              sx={{ fontSize: "20px", width: "67%", marginBottom: "30px" }}
+              sx={{ fontSize: "20px", width: "66%", marginBottom: "30px" }}
               variant="contained"
             >
               Restablecer contraseña
@@ -153,7 +153,7 @@ const RecoverPassword = (props) => {
           sx={{ fontWeight: "bold"}}
           textAlign={"center"}
         >
-          Recuperar contraseña
+          SmartDeviceSolutions
         </Typography>
         {renderContent()}
       </Paper>
