@@ -16,6 +16,10 @@ module.exports = {
       model: {
         type: Sequelize.STRING(20),
         allowNull: false,
+      },      
+      image: {
+        type: Sequelize.STRING(1024),
+        allowNull: false,
       },
       deviceCategoryId: {
         type: Sequelize.INTEGER,
