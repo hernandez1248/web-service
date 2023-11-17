@@ -1,5 +1,17 @@
 import React from 'react';
-import { Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container, Grid, TextField, InputLabel, Select, FormControl, MenuItem, Input, InputAdornment, Alert } from '@mui/material';
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogContentText,
+  DialogActions, 
+  Button, 
+  Grid, 
+  TextField, 
+  InputLabel, 
+  Select, 
+  FormControl, 
+  MenuItem, } from '@mui/material';
 import { useForm } from "react-hook-form";
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -7,80 +19,59 @@ import apiClient from '@/apiClient';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-import Slide from "@mui/material/Slide";
+const EditComponentModal = ({ open, onClose, component, onUpdate }) => {
 
-import IconButton from "@mui/material/IconButton";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import AddIcon from "@mui/icons-material/Add";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const ModalContentAddComponent = ({ recharge }) => {
-  const [open, setOpen] = React.useState(false);
+  // const [dataComponent, setDataComponent] = React.useState({ ...component });
   const [devicesId, setDeviceId] = React.useState('');
   const [devices, setDevices] = useState([]);
-
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-      setOpen(false);
-  };
 
   const { 
     register, 
     handleSubmit, 
     watch, 
     formState: { errors },
-    setError,
-    reset, 
+    reset 
   } = useForm();
 
- 
+
+  const [categorySelected, setCategorieSelected] = useState(null);
 
   const onSubmit = (data) => {
-    console.log(data);
+    data.id = component.id;
     //enviar la informacion del formulario al backend
-    apiClient.post('/api/components', data)
-      .then((response) => {
-        //console.log(response.data);
-        // alert(response.data.message);
-        Swal.fire({
+    apiClient.patch(`/api/components?id=${component.id}`, data)
+    .then((response) => {
+      console.log("Respuesta del servidor:", response.data);
+      Swal.fire({
           position: "center",
           icon: "success",
           iconColor: "#223354",
           text: response.data.message,
           confirmButtonText: "Aceptar",
           confirmButtonColor: "#223354"
-        });
-        setOpen(false);
-        recharge();
-        reset();
-
       })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response?.data?.message || 'Error al registrar el componente');
-
-        if (error.response?.data?.errors) {
-          error.response.data.errors.forEach((errorItem) => {
-            setError(errorItem.field, {
-              type: "validation",
-              message: errorItem.error
-            });
-          })
-        }
-      })
+        console.log(data);
+        onClose();
+        onUpdate(data);
+        //reset();
+    })
+    .catch((error) => {
+      console.log("Error al actualizar el componente:", error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        text: error.response?.data?.message || 'Error al actualizar el componente',
+      });
+    });
   };
+
+
+  const onSelectCategory = (e) => {
+    setCategorieSelected(e.target.value);
+  }
 
   useEffect(() => {
     /*Ir por los productos desde el backend */
-
     apiClient.get('api/device')
       .then(response => {
         setDevices(response.data || []);
@@ -91,30 +82,15 @@ const ModalContentAddComponent = ({ recharge }) => {
 
   }, []);
 
-  
+
   return (
-    <>
-      <Box item xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
-         
-        <Button
-         
-          onClick={handleClickOpen}
-          sx={{ margin: "10px", backgroundColor: "#223354" }}
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-        >
-            Agregar Componente
-        </Button>
-    </Box>
-      <Dialog 
+
+    <Dialog 
         open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        keepMounted
-        aria-describedby="alert-dialog-slide-description"
+        onClose={onClose}
         component={"form"}
         onSubmit={handleSubmit(onSubmit)}
+        method="patch"
         >
         <DialogTitle
           sx={{
@@ -127,18 +103,18 @@ const ModalContentAddComponent = ({ recharge }) => {
               color: "rgba(75, 114, 139, 1)"
           }}
       >
-          Agregar Componente
+          Editar Componente
       </DialogTitle>
-
-          <DialogContent >
+          <DialogContent>
             <DialogContentText id="alert-dialog-slide-description" sx={{ padding: 2 }}>
-              <Grid container spacing={2} sx={{ marginBottom: 10 }}>
+              <Grid container spacing={2} sx={{ marginBottom: 8 }}>
                 <Grid item xs={12} md={6}>
                   <TextField
                     id="name"
                     variant="outlined"
                     label="Nombre del componente"
                     fullWidth
+                    defaultValue={component.name}
                     error={!!errors.name}
                     helperText={errors.name?.message}
                     {
@@ -147,19 +123,19 @@ const ModalContentAddComponent = ({ recharge }) => {
                         required: '*Este campo es obligatorio.',
                         pattern: {
                           value: /^[A-Z a-z áéíóú 0-9.\-/]+$/i,
-                          message: 'No es un nombre válido.'
+                          message: 'No es un nombre valido.'
                         }
                       })
                     }
                   />
                 </Grid>
-
                 <Grid item xs={12} md={6}>
                   <TextField 
                     id="price"
                     variant="outlined"
                     label="Precio" 
                     fullWidth
+                    defaultValue={component.price}
                     error={!!errors.price}
                     helperText={errors.price?.message}
                     {
@@ -168,19 +144,19 @@ const ModalContentAddComponent = ({ recharge }) => {
                         required: '*Este campo es obligatorio.',
                         pattern: {
                           value: /^[0-9]+(\.[0-9]+)?$/i,
-                          message: 'No es un precio válido.'
+                          message: 'No es un precio valido.'
                         }
                       })
                     }
                   />
                 </Grid>
-                
                 <Grid item xs={12} md={6}>
                   <TextField
                     id="stock"
                     variant="outlined"
                     label="Stock" 
                     fullWidth
+                    defaultValue={component.stock}
                     error={!!errors.stock}
                     helperText={errors.stock?.message}
                     {
@@ -189,7 +165,7 @@ const ModalContentAddComponent = ({ recharge }) => {
                         required: '*Este campo es obligatorio.',
                         pattern: {
                           value: /^[0-9]+(\.[0-9]+)?$/i,
-                          message: 'No es un stock válido.'
+                          message: 'No es un stock valido.'
                         }
                       })
                     }
@@ -205,20 +181,20 @@ const ModalContentAddComponent = ({ recharge }) => {
                         {
                           required: '*Este campo es obligatorio.',
                           pattern: {
-                            message: 'No es un dispositivo válido.'
+                            message: 'No es un dispositivo valido.'
                           }
                         })
                       }
                       onChange={ev => setDeviceId(ev.target.value)}
                       fullWidth
+                      defaultValue={component.deviceId}
                       label="Selecciona el dispositivo"
                       error={!!errors.deviceId}
                       helperText={errors.deviceId?.message}
 
                     >
-                      <MenuItem>Selecciona el dispositivo</MenuItem>
-                        {devices.map((item) => (
-                       <MenuItem key={item.id} value={item.id}>{`${item.brand} ${item.model}`}</MenuItem>
+                      {devices.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>{`${item.brand} ${item.model}`}</MenuItem>
 
                       ))}
                     </Select>
@@ -230,6 +206,7 @@ const ModalContentAddComponent = ({ recharge }) => {
                     id="image"
                     label="Url de la imagen del componente" 
                     fullWidth
+                    defaultValue={component.image}
                     error={!!errors.image}
                     helperText={errors.image?.message}
                     {
@@ -257,20 +234,17 @@ const ModalContentAddComponent = ({ recharge }) => {
               marginBottom: "5px",
             }}
           >
-            <Button onClick={handleClose} variant="outlined" sx={{ margin: "10px"}}  style={{ borderColor: '#223354', color: '#223354' }}>
-               <HighlightOffIcon />
-              Cancel
+            <Button onClick={onClose} variant="outlined" sx={{ margin: "10px"}}  style={{ borderColor: '#223354', color: '#223354' }}>
+              <HighlightOffIcon />
+              Cancelar
             </Button>
             <Button type="submit" variant="contained" color="primary" sx={{ margin: "10px", backgroundColor: "#223354" }}  >
               <SaveOutlinedIcon />
-              Guardar
+               Guardar
             </Button>
           </DialogActions>
-        {/* </Container> */}
-
       </Dialog>
-    </>
   );
 };
 
-export default ModalContentAddComponent;
+export default EditComponentModal;
