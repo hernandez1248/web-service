@@ -61,11 +61,17 @@ export const authOptions = {
       //console.log({ token, account, user });
       //token.userRole = "admin"
       
+      if(user) {
+        token.id = user.id
+       }
+
       return token
     },
     async session({ session, token, user }){
       console.log("session");
       console.log({ session, token, user });
+      
+     session.user.id= token.id
       //session.user = token.session?.user;
       //session.userRole = token.userRole;
 
