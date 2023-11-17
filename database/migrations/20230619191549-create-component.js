@@ -21,6 +21,10 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
+      image: {
+        type: Sequelize.STRING(300),
+        allowNull: false,
+      },
       deviceId: {
         type: Sequelize.INTEGER,
         allowNull: false,
