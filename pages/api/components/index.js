@@ -18,7 +18,7 @@ export default function handler(req,res) {
 const componentsList = async (req, res) => {
     try {
         //leer el Component a filtrar
-        const { name } = req.query;
+        const { name, deviceId } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
@@ -33,6 +33,12 @@ const componentsList = async (req, res) => {
                 }],
             };
         }
+        if (deviceId) {
+            components = {
+              ...components,
+              deviceId,
+            };
+          }
 
         const componentes = await db.Component.findAll({
             where: components,

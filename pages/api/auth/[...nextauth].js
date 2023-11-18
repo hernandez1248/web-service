@@ -66,6 +66,7 @@ export const authOptions = {
       //token.userRole = "admin"
       return token
     },
+    
     async session({ session, token, user }){
       //session.user = token.session?.user;
       session.rol = token.rolUser;

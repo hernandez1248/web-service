@@ -315,8 +315,14 @@ const orderAdd = async (req, res) => {
             remaining = totalAmount - 0
         }
 
+
+        if (totalAmount === undefined || totalAmount === null) {
+            newIdOrden.fullPay = 0; // Asigna cero si totalAmount es undefined o null
+          } else {
+            newIdOrden.fullPay = totalAmount; // Asigna el valor de totalAmount si es válido
+          }
         // Agrega el monto total al campo 'fullPay' de la orden generada
-        newIdOrden.fullPay = totalAmount;
+        //newIdOrden.fullPay = totalAmount;
         newIdOrden.remainingPay = remaining
 
 
