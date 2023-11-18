@@ -12,7 +12,7 @@ export const checkUserEmailPassword = async (_email, password) => {
   }
 
   const { id, name, email, image, rol, } = user;
-
+  console.log(user);
   return {
     id,
     name,

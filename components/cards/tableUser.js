@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -126,8 +127,11 @@ const TableUser = () => {
 
   return (
     <Box>
+       {/*<Typography sx={{ display: "flex", justifyContent: "Center", fontSize: 25, fontWeight: 'bold',  }}>
+          Usuarios
+        </Typography>*/}
       <Paper>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
           <AddUser recharge={loadUsers}/>
         </Box>
 
