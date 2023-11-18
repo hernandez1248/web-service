@@ -60,8 +60,9 @@ export const authOptions = {
       console.log("jwt");
       console.log({ token, account, user });
       if(user){        
-      token.rolUser= user.rol
-      }  
+      token.rolUser= user.rol;
+      token.id = user.id;
+      }       
       
       //token.userRole = "admin"
       return token
@@ -70,6 +71,7 @@ export const authOptions = {
     async session({ session, token, user }){
       //session.user = token.session?.user;
       session.rol = token.rolUser;
+      session.user.id= token.id;
 
       return session;
     }
