@@ -13,29 +13,6 @@ export default function handler(req,res) {
     }
 }
 
-const categoriesListg = async (req, res) => {
-    try {
-        
-        let categories = [];
-        if(categories){
-        categories = await db.DevicesCategory.findAll({
-        })
-
-        }
-        
-
-    } catch(error) {
-        console.log(error)
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
-            }
-        )
-    
-    }
-}
-
 const categoriesList = async (req, res) => {
     try {
         //leer los Device

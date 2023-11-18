@@ -63,6 +63,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    image: {
+      type: DataTypes.STRING(1024),
+      allowNull: false,
+      validate: {
+        isUrl: {
+          msg: "La URL del avatar no es válida. Debe ser una URL completa.",
+        },
+      },
+    },
     deviceCategoryId: {
       type: DataTypes.INTEGER,
     },    
