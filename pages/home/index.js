@@ -1,260 +1,135 @@
-import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import ButtonClose from "@/components/ButtonClose";
-import PeopleIcon from "@mui/icons-material/People";
-import SmartphoneIcon from "@mui/icons-material/Smartphone";
-import ConstructionIcon from "@mui/icons-material/Construction";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import HomeIcon from '@mui/icons-material/Home';
-import { useRouter } from "next/router";
-import { useState } from "react";
-import RegisterPage from "../orders";
-import UsersView from "../users/index2";
-import DevicesView from "../devices";
-import ComponentsView from "../components";
+  import React from "react";
+  import {
+    Paper,
+    Typography,
+    Button,
+    Card,
+    CardContent,
+    CardActions,
+    CardHeader,
+    CardMedia,
+  } from "@mui/material";
+  import { Assignment, Devices, Settings } from "@mui/icons-material";
+  import PeopleIcon from "@mui/icons-material/People";
+  import List from "@mui/material/List";
+  import ListItem from "@mui/material/ListItem";
+  import ListItemText from "@mui/material/ListItemText";
+  import ListItemAvatar from "@mui/material/ListItemAvatar";
+  import Avatar from "@mui/material/Avatar";
+  import TabletAndroidIcon from "@mui/icons-material/TabletAndroid";
 
-const drawerWidth = 240;
+  import ImageIcon from "@mui/icons-material/Image";
+  import WorkIcon from "@mui/icons-material/Work";
+  import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
+  function HomePage({ user }) {
+    return (
+      <Paper>
+        <Typography
+          sx={{
+            fontSize: 35,
+            display: "flex",
+            justifyContent: "center",
+            fontWeight: "bold",
+          }}
+        >
+          SmartDeviceSolutions
+        </Typography>
 
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
+        <Typography
+          sx={{
+            marginTop: 1,
+            fontSize: 20,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          Generador de órdenes para mantenimiento y reparación de dispositivos
+        </Typography>
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+        <List
+        className="horizontal-list"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginLeft: 20,
+          padding: 0,
+        }}
+      >
+        <ListItem className="horizontal-list-item">
+          <ListItemAvatar>
+            <Avatar
+              src="https://w7.pngwing.com/pngs/602/747/png-transparent-computer-icons-name-that-rose-smartphone-mobile-phones-business-smartphone-electronics-telephone-call-rectangle.png"
+              style={{ width: 55, height: 55 }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary="Celulares"
+            primaryTypographyProps={{sx: { fontWeight: "bold", fontSize: 20 } }}
+          />
+        </ListItem>
+        <ListItem className="horizontal-list-item">
+          <ListItemAvatar>
+            <Avatar 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA7b20uQmFEPGmfV7vOlTJloAUa9_kkkdJYQ&usqp=CAU" 
+              style={{ width: 48, height: 48 }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary="Tabletas"
+            primaryTypographyProps={{ sx: { fontWeight: "bold", fontSize: 20 } }}
+          />
+        </ListItem>
+        <ListItem className="horizontal-list-item">
+          <ListItemAvatar>
+            <Avatar
+              src="https://images.vexels.com/media/users/3/131217/isolated/preview/e613fbde0ac88fd305dee8929b6679f1-icono-de-circulo-de-portatil.png"
+              style={{ width: 70, height: 70 }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary="Laptops"
+            primaryTypographyProps={{ sx: { fontWeight: "bold", fontSize: 20 } }}
+          />
+        </ListItem>
+        <ListItem className="horizontal-list-item">
+          <ListItemAvatar>
+            <Avatar
+              src="https://www.shutterstock.com/image-vector/computer-flat-colored-icon-260nw-786266977.jpg"
+              style={{ width: 55, height: 55 }}
+            />
+          </ListItemAvatar>
+          <ListItemText
+            primary="PC"
+            primaryTypographyProps={{ sx: { fontWeight: "bold", fontSize: 20 } }}
+          />
+        </ListItem>
+      </List>
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+        <CardMedia
+          component="img"
+          alt="Imagen"
+          image="https://reisdigital.es/wp-content/uploads/2022/10/los-mejores-software-y-hardware-para-tu-empresa.jpg"
+          sx={{
+            width: 600,
+            margin: "auto",
+            display: "block",
+            borderRadius: 10,
+          }}
+        />
+        <Typography
+          sx={{
+            marginTop: 1,
+            fontSize: 20,
+            display: "flex",
+            justifyContent: "center",
+            fontWeight: "bold"
+          }}
+        >
+            Somos una empresa dedicada a la solución de fallas en los dispositivos inteligentes
+        </Typography>
+      </Paper>
+    );
+  }
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
-export default function MiniDrawer() {
-  
-  const [clickOrder, setClickOrder] = useState(false);
-  
-  const [clickUser, setClickUser] = useState(false);
-  
-  const [clickDevice, setClickDevice] = useState(false);
-
-  const [clickComponent, setClickComponent] = useState(false);
-
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const router = useRouter();
-
-  const handleHomeClick = () => {
-    router.push('/home'); 
-  };
-  const handleUsuariosClick = () => {
-    router.push("/users"); // Reemplaza con la ruta correcta a la página de usuarios
-  };
- /*  const handleUsuariosClick = () => {
-    //router.push('/users'); 
-    setClickUser(true);    
-    setClickOrder(false);
-    setClickComponent(false);
-    setClickDevice(false);
-  }; */
-  const handleOrdersClick = () => {    
-    //router.push('/orders'); 
-    setClickOrder(true);
-    setClickUser(false);  
-    setClickComponent(false);
-    setClickDevice(false);
-  };
-
-  const handleDevicesClick = () => {
-    //router.push('/devices'); 
-    setClickDevice(true);
-    setClickUser(false);    
-    setClickOrder(false);
-    setClickComponent(false);
-  };
-  const handleComponentsClick = () => {
-    //router.push('/components'); 
-    setClickComponent(true);
-    setClickUser(false);    
-    setClickOrder(false);
-    setClickDevice(false);
-  };
-
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            SmartDeviceSolutions
-          </Typography>
-          <ButtonClose/>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {["Inicio", "Usuarios", "Ordenes", "Dispositivos", "Componentes"].map(
-            (text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    padding: 3,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 4 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {index === 0 ? (
-                      <HomeIcon  onClick={handleHomeClick} /> 
-                    ) : index === 1 ? (
-                      <PeopleIcon onClick={handleUsuariosClick} />
-                    ) : index === 2 ? (
-                      <ShoppingCartIcon onClick={handleOrdersClick} />
-                    ): index === 3 ? (
-                      <SmartphoneIcon onClick={handleDevicesClick} />
-                    ) : (
-                      <ConstructionIcon onClick={handleComponentsClick} />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            )
-          )}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        
-          {clickOrder ? (
-            <div>
-              <RegisterPage/>
-            </div>
-          ) : null}
-
-          
-          
-          
-          {clickDevice ? (
-            <div>
-              <DevicesView/>
-            </div>
-          ) : null}
-
-          {clickComponent ? (
-            <div>
-              <ComponentsView/>
-            </div>
-          ) : null}
-        
-      </Box>
-
-
-    </Box>
-  );
-}
+  export default HomePage;

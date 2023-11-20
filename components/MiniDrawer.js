@@ -8,6 +8,7 @@ import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -15,18 +16,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Button from "@mui/material/Button";  // Paso 1: Importa Button
 import ButtonClose from "@/components/ButtonClose";
 import PeopleIcon from "@mui/icons-material/People";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import HomeIcon from "@mui/icons-material/Home";
+import HomeIcon from '@mui/icons-material/Home';
 import { useRouter } from "next/router";
-import {IconButton } from '@mui/material';
 import { useSession } from 'next-auth/react';
-import CardComponent from "@/components/cards/cardComponents";
-
+import { Assignment, Devices } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -56,6 +54,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -94,16 +93,12 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const MiniDrawer = () => {
+export default function MiniDrawer({children}) {
+
+  const { data: session } = useSession();
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
- 
-
-  const router = useRouter();
-
-  const handleHomeClick = () => {
-    router.push("/home"); // Reemplaza con la ruta correcta a la página de usuarios
-  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,8 +108,25 @@ const MiniDrawer = () => {
     setOpen(false);
   };
 
-  const { data: session } = useSession();
+  const router = useRouter();
 
+  const handleHomeClick = () => {
+    router.push('/home'); 
+  };
+  const handleUsuariosClick = () => {
+    router.push("/users");
+  };
+
+  const handleOrdersClick = () => {
+    router.push("/orders")
+  }
+
+  const handleDevicesClick = () => {
+    router.push("/devices")
+  }
+  const handleComponentsClick = () => {
+    router.push("/components")
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -135,7 +147,7 @@ const MiniDrawer = () => {
           </IconButton>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <Typography variant="h6" noWrap component="div">
-            Componentes
+            SmartDeviceSolutions
             </Typography>
             <ButtonClose user={session?.user} />
           </div>
@@ -153,7 +165,7 @@ const MiniDrawer = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Usuarios", "Ordenes", "Dispositivos", "Componentes"].map(
+          {["Inicio", "Usuarios", "Ordenes", "Dispositivos", "Componentes"].map(
             (text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
@@ -173,21 +185,15 @@ const MiniDrawer = () => {
                     }}
                   >
                     {index === 0 ? (
-                      <HomeIcon onClick={handleHomeClick} />
+                      <HomeIcon  onClick={handleHomeClick} /> 
                     ) : index === 1 ? (
-                      <PeopleIcon onClick={() => handleOrdenesClick()} />
+                      <PeopleIcon onClick={handleUsuariosClick} />
                     ) : index === 2 ? (
-                      <ShoppingCartIcon
-                        onClick={() => handleDispositivosClick()}
-                      />
-                    ) : index === 3 ? (
-                      <SmartphoneIcon
-                        onClick={() => handleDispositivosClick()}
-                      />
+                      <Assignment onClick={handleOrdersClick} />
+                    ): index === 3 ? (
+                      <Devices onClick={handleDevicesClick} />
                     ) : (
-                      <ConstructionIcon
-                        onClick={() => handleComponentesClick()}
-                      />
+                      <ConstructionIcon onClick={handleComponentsClick} />
                     )}
                   </ListItemIcon>
                   <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -197,12 +203,10 @@ const MiniDrawer = () => {
           )}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1}}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3}}>
         <DrawerHeader />
-          <CardComponent />
-      </Box>
+          {children}
+      </Box> 
     </Box>
   );
-};
-
-export default MiniDrawer;
+}

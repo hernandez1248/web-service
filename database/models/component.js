@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         //El price solo permite  numeros
         is: {
-          args: [/^[0-9\s]+$/i ],
+          args: [/^[0-9]+(\.[0-9]+)?$/i],
           msg: "El precio debe contener solo números."
         }
       }
@@ -68,10 +68,19 @@ module.exports = (sequelize, DataTypes) => {
         },
         //El stock solo permite  numeros
         is: {
-          args: [/^[0-9\s]+$/i ],
+          args: [/^[0-9]+(\.[0-9]+)?$/i],
           msg: "El stock debe contener solo números."
         }
       }
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isUrl: {
+          msg: "La URL no es válida. Debe ser una URL completa.",
+        },
+      },
     },
     deviceId: {
       type: DataTypes.INTEGER,

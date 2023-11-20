@@ -174,7 +174,10 @@ const LoginPage = () => {
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
 
-  const { p = "home" } = query;
+  let { p = "home" } = query;
+  if(session?.rol == 'empleado') {
+    p = 'users';
+  }
 
   if (session) {
     return {
