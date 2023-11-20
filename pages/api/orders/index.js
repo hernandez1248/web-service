@@ -17,15 +17,59 @@ export default function handler(req,res) {
 
 const orderList = async (req, res) => {
     try {
-        //leer el Order a filtrar
-        const { orderId } = req.query;
-        const { dateRegister } = req.query;
+        //leer el Order a filtrar      
+        const { orderId, dateRegister, fullName, servicesId, status, userId} = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
         //leer los Order
         let orders = [];
-        if (orderId) {
+
+        let states = [];
+        
+        if (fullName) {
+            orders = {
+                [Op.or]: [{
+                    fullName: {//[Op.like]: 'tra%'
+                        [Op.like]: `%${fullName}%`,
+                    },
+                }],
+            };
+        }
+        if (servicesId) {
+            orders = {
+              ...orders,
+              servicesId,
+            };
+        }
+
+        if(status){
+            states = await db.State.findAll({
+                where: {
+                    status,
+                },
+                attributes: ['ordersId'], // Seleccionar solo el ID de las órdenes
+                raw: true, // Obtener resultados como objetos simples
+                //include: ['order'],
+                });
+
+                const filterStatusOrderId = states.map(state => state.ordersId);
+            
+                orders = {
+                    ...orders,
+                    id:filterStatusOrderId,
+                  };
+        }
+
+        if (userId) {
+            orders = {
+              ...orders,
+              userId,
+            };
+        }
+
+
+        /*if (orderId) {
             orders = await db.Order.findAll({
             where: {
                 id:orderId,
@@ -72,14 +116,18 @@ const orderList = async (req, res) => {
 
                     return res.json({ orders,message: 'Orden encontrada' });
 
-        }else {
+        }
+        else {
             orders = await db.Order.findAll({
                 include: ['servicescategory','device','user','orderdetails','state'],
             })
-        }
+        }*/
+        const ordenes = await db.Order.findAll({
+            where: orders,
+            include: ['servicescategory','device','user','orderdetails','state'],
+        });
 
-
-        return res.json(orders);
+        return res.json(ordenes);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
