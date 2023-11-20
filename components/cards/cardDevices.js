@@ -32,7 +32,7 @@ const CardDevices = () => {
     setSearchTerm(event.target.value);
 
     const filtered = devices.filter((device) => {
-      const model = `${device.model}`.toLowerCase();
+      const model = `${device.brand} ${device.model}`.toLowerCase();
       const search = event.target.value.toLowerCase();
       return model.includes(search);
     });

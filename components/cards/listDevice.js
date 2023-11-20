@@ -30,7 +30,7 @@ function ListDevice({ device, onDelete, onUpdate }) {
 
   return (
     <>
-    <Card elevation={10} sx={{ maxWidth: 300, maxHeight: 900, marginBottom: '30px'}} style={{ width: '250px', height: '500px', marginBottom: '40px', marginLeft: '30px'}}>
+    <Card elevation={10} sx={{ maxWidth: 300, maxHeight: 430, marginBottom: '30px'}} style={{ width: '250px', height: '500px', marginBottom: '40px', marginLeft: '30px'}}>
       <CardContent>
         <Box display="flex" flexDirection="column" alignItems="center">
           <CardMedia component="img" height="240" image={data.image} alt={data.brand} />
@@ -42,7 +42,7 @@ function ListDevice({ device, onDelete, onUpdate }) {
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between" marginTop="15px" marginBottom="20px">
-          <Tooltip title="Editar" arrow>
+          <Tooltip>
             <Button
               variant="contained"
               onClick={handleEdit}
@@ -52,7 +52,7 @@ function ListDevice({ device, onDelete, onUpdate }) {
               Editar
             </Button>
           </Tooltip>
-          <Tooltip title="Eliminar" arrow>
+          <Tooltip>
             <Button
               variant="contained"
               onClick={handleDelete}
