@@ -34,15 +34,18 @@ const TableOrder = () => {
 
   const [service, setService] = useState([{ id: 1, name: "Mantenimiento" }, { id: 2, name: "Reparacion" }]);
   const [state, setStates] = useState([{ id: 1, name: "Registrada" }, { id: 2, name: "Pendiente" }, { id: 3, name: "Completada" }]);
-  const [usersIdO, setUserOrders] = useState([]);
 
   const [selectServiceType, setSelectServiceType] = useState('fullOrders');
   const [selectStatusType, setSelectStatusType] = useState('fullOrders');
-  const [selectUsers, setSelectUsers] = useState('fullOrders');
 
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [selectedStatusId, setSelectedStatusId] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const { data: session } = useSession();
+
+  let userLogueado = session?.user?.id;
+  let rolUserLogueado = session?.user?.rol;
+
 
   const handleServiceChange = (event) => {
     const servicesId = event.target.value;
@@ -58,13 +61,6 @@ const TableOrder = () => {
     setSearchTerm("");
   };
 
-  const handleUsersChange = (event) => {
-    const userId = event.target.value;
-    setSelectUsers(userId);
-    setSelectedUserId(userId === 'fullOrders' ? null : userId);
-    setSearchTerm("");
-  };
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
 
@@ -76,23 +72,26 @@ const TableOrder = () => {
 
       const orderStatusMatch = selectedStatusId === null;
 
-      const orderUserMatch = selectedUserId === null || order.userId === selectedUserId;
-
-      return orderUserMatch && orderStatusMatch && orderMatch && fullName.includes(search);
+      return orderStatusMatch && orderMatch && fullName.includes(search);
     });
 
     setFilteredOrders(filtered);
     setCurrentPage(1);
   };
+  
+  if(rolUserLogueado ==='administrador'){
+    userLogueado = undefined;
+  } else if(rolUserLogueado ==='empleado'){
+    userLogueado = session?.user?.id;
+  }
 
 
   const loadOrders = () => {
     console.log('Se recargó');
-
     const queryParams = {
       servicesId: selectedServiceId || undefined,
       status: selectedStatusId || undefined,
-      userId: selectedUserId || undefined,
+      userId: userLogueado,//2,//selectedUserId || undefined,
       fullName: searchTerm || undefined,
     };
 
@@ -118,13 +117,13 @@ const TableOrder = () => {
 
   useEffect(() => {
     loadOrders();
-  }, []);
+  }, [userLogueado, rolUserLogueado]);
 
   useEffect(() => {
-    if (selectServiceType !== null || selectStatusType !== null ||selectUsers !== null ||  searchTerm !== "") {
+    if (selectServiceType !== null || selectStatusType !== null ||  searchTerm !== "") {
       loadOrders();
     }
-  }, [selectServiceType, selectStatusType, selectUsers, searchTerm]);
+  }, [selectServiceType, selectStatusType, searchTerm]);
 
   const updateOrder = (order) => {
     console.log(order);
@@ -191,7 +190,6 @@ const TableOrder = () => {
     });
   };
 
-  const { data: session } = useSession();
 
 
   return (
@@ -263,25 +261,6 @@ const TableOrder = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={6} spacing={2}>
-            <FormControl fullWidth>
-              <InputLabel id="device-id">Generada por</InputLabel>
-              <Select
-                id="device-id"
-                label="Generada por"
-                value={selectUsers}
-                onChange={handleUsersChange}
-              //value={selectServiceType}
-              //onChange={handleServiceChange}
-              >
-                <MenuItem value="">Todos</MenuItem>
-
-                {usersIdO.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>{`${item.name}`}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
         </Grid>
 
 
