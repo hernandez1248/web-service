@@ -106,7 +106,7 @@ const LoginPage = () => {
             autoComplete="email"
             autoFocus
             {...register("email", {
-              required: "Este campo es requerido",
+              required: "El correo es requerido",
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
@@ -120,7 +120,7 @@ const LoginPage = () => {
             id="password"
             autoComplete="current-password"
             {...register("password", {
-              required: "Este campo es requerido",
+              required: "La contraseña es requerida",
             })}
             error={!!errors.password}
             helperText={errors.password?.message}
@@ -176,7 +176,7 @@ export const getServerSideProps = async ({ req, query }) => {
 
   let { p = "home" } = query;
   if(session?.rol == 'empleado') {
-    p = 'users';
+    p = 'homeEmployee';
   }
 
   if (session) {
