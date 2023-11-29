@@ -2,8 +2,6 @@
 
 import { SessionProvider, getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import MiniDrawer from '@/components/MiniDrawer';
-import MiniDrawerEmployee from '@/components/MiniDrawerEmployee';
 import Drawer from '@/components/Drawer';
 
 
@@ -13,7 +11,10 @@ export default function App({ Component, pageProps }) {
 
   const router = useRouter();
   const excludedRoutes = ['/', '/login', '/restore'];
-  const isExcludedRoute = excludedRoutes.includes(router.pathname);
+  let isExcludedRoute = excludedRoutes.includes(router.pathname);
+  if (router.pathname.startsWith('/recover-password')) {
+    isExcludedRoute = true;
+  }
 
   if (isExcludedRoute) {
     // Si es la página de inicio, no mostrar el MiniDrawer
