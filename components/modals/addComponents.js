@@ -53,10 +53,10 @@ const ModalContentAddComponent = ({ recharge }) => {
         Swal.fire({
           position: "center",
           icon: "success",
-          iconColor: "#223354",
+          // iconColor: "#223354",
           text: response.data.message,
           confirmButtonText: "Aceptar",
-          confirmButtonColor: "#223354"
+          // confirmButtonColor: "#223354"
         });
         setOpen(false);
         recharge();
@@ -120,16 +120,10 @@ const ModalContentAddComponent = ({ recharge }) => {
           sx={{
               display: "flex",
               justifyContent: "center",
-              fontSize: 25,
-              fontWeight: "bold",
-              backgroundColor: "rgba(75, 114, 139, 0.05)",
-              borderRadius: 3,
-              color: "rgba(75, 114, 139, 1)"
           }}
       >
           Agregar Componente
       </DialogTitle>
-
           <DialogContent >
             <DialogContentText id="alert-dialog-slide-description" sx={{ padding: 2 }}>
               <Grid container spacing={2} sx={{ marginBottom: 10 }}>
@@ -257,17 +251,25 @@ const ModalContentAddComponent = ({ recharge }) => {
               marginBottom: "5px",
             }}
           >
-            <Button onClick={handleClose} variant="outlined" sx={{ margin: "10px"}}  style={{ borderColor: '#223354', color: '#223354' }}>
+            <Button onClick={handleClose} variant="contained" color="error" >
                <HighlightOffIcon />
               Cancel
             </Button>
-            <Button type="submit" variant="contained" color="primary" sx={{ margin: "10px", backgroundColor: "#223354" }}  >
+            <Button type="submit" variant="contained">
               <SaveOutlinedIcon />
               Guardar
             </Button>
           </DialogActions>
         {/* </Container> */}
 
+          <style jsx>
+            {`
+              .cancel{
+                color: #FFFFFF;
+                text-decoration: none;
+              }`
+            }
+          </style>
       </Dialog>
     </>
   );

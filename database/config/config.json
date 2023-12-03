@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "Mendoz@1",
-    "database": "db_test",
+    "password": null,
+    "database": "sdsproject_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
