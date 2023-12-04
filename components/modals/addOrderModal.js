@@ -25,9 +25,7 @@ export default function AddOrder({ recharge, user }) {
     const [showPassword, setShowPassword] = useState(false);
     const [componentsId, setComponentId] = React.useState('');
     const [deviceId, setDeviceId] = React.useState('');
-    const [componentDetail, setComponentDetails] = React.useState('');
     const [categoriesDevice, setCategoriesDevice] = useState([]);
-
     const [componentDetaillAdd, setComponentDetaillAdd] = useState([]);
     const [openColorPicker, setOpenColorPicker] = useState(false);
     const [selectedColor, setSelectedColor] = useState("#000000"); // Color por defecto negro
@@ -140,10 +138,11 @@ export default function AddOrder({ recharge, user }) {
                         });
                     }
                 });
-        };*/
 
     console.log("EL COLOR ES:");
     console.log(selectedColor);
+
+        };*/
 
     useEffect(() => {
         /*Ir por los productos desde el backend */
@@ -166,11 +165,16 @@ export default function AddOrder({ recharge, user }) {
 
     }, []);
 
+
+    // Función para filtrar los componentes por el dispositivo seleccionado
     const componentAddDetail = componentDetaillAdd.find(component => component.id === componentsId);
+    const filteredComponents = componentDetaillAdd.filter(component => component.deviceId === deviceId);
+    const componentsArray = Object.values(filteredComponents);
 
     useEffect(() => {
         setComponentD({ ...componentAddDetail })
     }, [componentAddDetail]);
+
     const [componentD, setComponentD] = React.useState({ ...componentAddDetail });
 
     const onSubmit = (data) => {
@@ -264,10 +268,6 @@ export default function AddOrder({ recharge, user }) {
                                     }
                                 />
                             </Grid>
-
-
-
-
 
                             <Grid item xs={12} md={6}>
                                 <TextField label="Telefono" fullWidth
@@ -419,9 +419,6 @@ export default function AddOrder({ recharge, user }) {
                                 />
                             </Grid>
 
-
-
-
                             <Button onClick={agregarDetalle}>Agregar detalle</Button>
 
                             {detalles.map((detalle, index) => (
@@ -446,10 +443,10 @@ export default function AddOrder({ recharge, user }) {
                                                 error={!!errors.componentsId}
                                                 helperText={errors.componentsId?.message}
 
-                                            >
-                                                {componentDetaillAdd.map((item) => (
-                                                    <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-                                                ))}
+                                            > 
+                                            {componentsArray.map((item) => (
+                                                <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                                            ))}
                                             </Select>
                                         </FormControl>
                                     </Grid>
