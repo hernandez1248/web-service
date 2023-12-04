@@ -1,29 +1,48 @@
-import '@/styles/globals.css';
-import { SessionProvider } from 'next-auth/react';
+// pages/_app.js
+
+import { SessionProvider, getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import MiniDrawer from '@/components/MiniDrawer';
+import MiniDrawerEmployee from '@/components/MiniDrawerEmployee';
+import Drawer from '@/components/Drawer';
+
+
 
 export default function App({ Component, pageProps }) {
+ 
+
   const router = useRouter();
-  const excludedRoutes = ['/', '/login', '/restore',];
+  const excludedRoutes = ['/', '/login', '/restore'];
   const isExcludedRoute = excludedRoutes.includes(router.pathname);
 
   if (isExcludedRoute) {
     // Si es la página de inicio, no mostrar el MiniDrawer
     return (
-      <SessionProvider session={pageProps.session} refetchInterval={0}>
+      <SessionProvider refetchInterval={0}>
         <Component {...pageProps} />
       </SessionProvider>
     );
   }
 
   // Mostrar el MiniDrawer en todas las demás páginas
+  const isAdmin = pageProps.session?.rol === 'administrador';
+
+
   return (
-    <SessionProvider session={pageProps.session} refetchInterval={0}>
-      <MiniDrawer>
+    <SessionProvider refetchInterval={0}>
+      <Drawer>
         <Component {...pageProps} />
-      </MiniDrawer>
+      </Drawer>
     </SessionProvider>
   );
 }
 
+
+export const getServerSideProps = async ({ req, query }) => {
+  const session = await getSession({ req });
+  console.log("Holaaa");
+  console.log(session);
+  return {
+    props: {session},
+  };
+};

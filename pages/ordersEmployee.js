@@ -1,10 +1,10 @@
 import React from 'react';
 import TableOrder from '@/components/cards/tableOrder';
 
-function Orders() {
+function OrdersEmployee() {
   return (
     <TableOrder />
   );
 }
 
-export default Orders;
+export default OrdersEmployee;
