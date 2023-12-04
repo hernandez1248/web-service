@@ -278,14 +278,14 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
     useEffect(() => {
 
     }, [componentAddOrderDetail, totalPrice]);
-
+ /*
     console.log("///////////COMPONENTE////////////////");
     console.log(selectedComponent);
     console.log(componentId);
     console.log("COMPONENTE SELECCIONADO");
     console.log(componentAddOrderDetail);
 
-    /*useEffect(() => {
+   useEffect(() => {
         setDevices({ ...devices })
     }, [devices]);*/
 
