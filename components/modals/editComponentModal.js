@@ -194,7 +194,6 @@ const EditComponentModal = ({ open, onClose, component, onUpdate }) => {
                     </Select>
                   </FormControl>
                 </Grid>
-
                 <Grid item xs={12} md={12}>
                   <TextField 
                     id="image"

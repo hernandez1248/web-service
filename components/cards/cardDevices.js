@@ -2,9 +2,13 @@ import apiClient from "@/apiClient";
 import {
   Box,
   Container,
+  FormControl,
   Grid,
   InputAdornment,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -25,16 +29,30 @@ const CardDevices = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDevices, setFilteredDevices] = useState([]);
   const [devices, setDevices] = useState([]);
+
+  const [categorydevices, setCategoryDevices] = useState([]);
+  const [categorydeviceSelected, setCategoryDeviceSelected] = useState('todosDevices');
+  const [selectedCategoryDeviceId, setSelectedCategoryDeviceId] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const devicesPerPage = 8;
+
+  const handleCategoryDeviceChange = (event) => {
+    const categoryDeviceId = event.target.value;
+    setCategoryDeviceSelected(categoryDeviceId);
+    setSelectedCategoryDeviceId(categoryDeviceId === 'todosDevices' ? null : categoryDeviceId);
+    setSearchTerm("");
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
 
     const filtered = devices.filter((device) => {
-      const model = `${device.model}`.toLowerCase();
+      const model = `${device.brand}`.toLowerCase();
       const search = event.target.value.toLowerCase();
-      return model.includes(search);
+      const categoryDeviceMatch = selectedCategoryDeviceId === null || device.deviceCategoryId === selectedCategoryDeviceId;
+
+      return categoryDeviceMatch && model.includes(search);
     });
 
     setFilteredDevices(filtered);
@@ -44,7 +62,13 @@ const CardDevices = () => {
 
   const loadDevices = () => {
     console.log('Se recargó');
-    apiClient.get("/api/device")
+
+    const queryParams = {
+      deviceCategoryId: selectedCategoryDeviceId || undefined,
+      brand: searchTerm || undefined,
+    };
+
+    apiClient.get("/api/device", { params: queryParams })
       .then((response) => {
         console.log("Respuesta de la API:", response.data);
         setDevices(response.data || []);
@@ -53,11 +77,30 @@ const CardDevices = () => {
       .catch((error) => {
         console.log(error);
       });
+
+    apiClient.get("/api/categories")
+      .then((response) => {
+        console.log("categorias:", response.data);
+        setCategoryDevices(response.data || []);
+      })
+      .catch((error) => {
+        console.log("Error al obtener las categorias:", error);
+      });
+
+
   };
 
   useEffect(() => {
     loadDevices();
   }, []);
+
+
+  useEffect(() => {
+    if (categorydeviceSelected !== null || searchTerm !== "") {
+      loadDevices();
+    }
+  }, [categorydeviceSelected, searchTerm]);
+
 
   const updateDevice = (device) => {
     console.log(device);
@@ -131,24 +174,45 @@ const CardDevices = () => {
           {<AddDevice recharge={loadDevices} />}
         </Box>
 
-        <Box sx={{ marginRight: "10px", marginLeft: "10px",  marginBottom: '40px'}}>
-          <TextField
-            placeholder="Buscar dispositivo"
-            variant="outlined"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
+        <Grid container spacing={2} sx={{ display: 'flex', alignItems: 'center' }}>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              placeholder="Buscar dispositivo"
+              variant="outlined"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} spacing={2}>
+            <FormControl fullWidth>
+              <InputLabel id="categoryDevice-id">Categoria</InputLabel>
+              <Select
+                id="categoryDevice-id"
+                label="Categoria"
+                value={categorydeviceSelected}
+                onChange={handleCategoryDeviceChange}
+              >
+                <MenuItem value="todosDevices">Todos</MenuItem>
+                {categorydevices.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>{`${item.type}`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+
         <Container component={Paper}>
-          <Grid container  justifyContent="inherit"  >
+          <Grid container justifyContent="inherit"  >
             {renderDevices()}
           </Grid>
 

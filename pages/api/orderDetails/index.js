@@ -6,7 +6,7 @@ export default function handler(req,res) {
             return orderDetailsList(req, res);
         case 'DELETE':
             return orderDetailsDelete(req, res);
-        case 'PATCH':
+        case 'PATCH': 
             return orderDetailsUpdate(req, res);
         case 'POST':
             return orderDetailsAdd(req, res);            

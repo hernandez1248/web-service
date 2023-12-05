@@ -137,10 +137,8 @@ const CardComponent = () => {
             Swal.fire({
               position: "center",
               icon: "success",
-              iconColor: "#223354", 
               text: response.data.message,
               confirmButtonText: "Aceptar",
-              confirmButtonColor: "#223354",
             });
             loadComponents();
           })
@@ -155,7 +153,6 @@ const CardComponent = () => {
     setCurrentPage(newPage);
   };
 
-  
   return (
     <Box>
       <Paper>

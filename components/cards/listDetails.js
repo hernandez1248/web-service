@@ -8,7 +8,7 @@ import {
   Button,
   IconButton,
   Grid,
-  Typography,
+  Typography, 
   TableHead,
   Table,
   TableContainer,
@@ -56,8 +56,6 @@ function ListDetail({ onDeleteDetail, onUpdateDetails, details, setComponentList
     onDeleteDetail(detail.id);
   }
 
-
-  
   const onSubmitOrderDetailEdit = () => { 
     
     const updatedDetails = {
@@ -71,7 +69,7 @@ function ListDetail({ onDeleteDetail, onUpdateDetails, details, setComponentList
       componentsId: componentId || detail.componentsId,
       // Agregar otros campos que se hayan modificado
     };
-console.log(updatedDetails);
+    console.log(updatedDetails);
     apiClient.patch(`/api/orderDetails?id=${detail.id}`, updatedDetails)
     .then((response) => {
       console.log("Respuesta del servidor:", response.data);
