@@ -308,7 +308,7 @@ export default function AddOrder({ recharge, user }) {
 
                                     >
                                         <MenuItem value={1}>Mantenimiento</MenuItem>
-                                        <MenuItem value={2}>Reparacion</MenuItem>
+                                        <MenuItem value={2}>Reparación</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
