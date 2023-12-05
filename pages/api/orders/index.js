@@ -51,7 +51,7 @@ const orderList = async (req, res) => {
                 attributes: ['ordersId'], // Seleccionar solo el ID de las órdenes
                 raw: true, // Obtener resultados como objetos simples
                 //include: ['order'],
-                });
+                }); 
 
                 const filterStatusOrderId = states.map(state => state.ordersId);
             

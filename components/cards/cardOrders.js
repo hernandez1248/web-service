@@ -10,7 +10,7 @@ function CardOrder({index, order, onDelete, ruteDirection}) {
     onDelete(index);
     apiClient.delete(`./api/orders?orderSelected=${data.id}`)
   }
-  
+   
   return (
     <Box>      
     <Card elevation={10} style={{ width: '100%', height: 'auto', marginBottom: '20px' }}>

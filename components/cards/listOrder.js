@@ -6,7 +6,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import apiClient from "@/apiClient";
 import ViewSingleOrderModal from "../modals/viewSingleOrder";
 
-
+ 
 const getRolColor = (rol) => {
   return rol === "administrador"
     ? "red"
