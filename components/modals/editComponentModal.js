@@ -45,10 +45,8 @@ const EditComponentModal = ({ open, onClose, component, onUpdate }) => {
       Swal.fire({
           position: "center",
           icon: "success",
-          iconColor: "#223354",
           text: response.data.message,
           confirmButtonText: "Aceptar",
-          confirmButtonColor: "#223354"
       })
         console.log(data);
         onClose();
@@ -97,10 +95,6 @@ const EditComponentModal = ({ open, onClose, component, onUpdate }) => {
               display: "flex",
               justifyContent: "center",
               fontSize: 25,
-              fontWeight: "bold",
-              backgroundColor: "rgba(75, 114, 139, 0.05)",
-              borderRadius: 3,
-              color: "rgba(75, 114, 139, 1)"
           }}
       >
           Editar Componente
@@ -234,15 +228,24 @@ const EditComponentModal = ({ open, onClose, component, onUpdate }) => {
               marginBottom: "5px",
             }}
           >
-            <Button onClick={onClose} variant="outlined" sx={{ margin: "10px"}}  style={{ borderColor: '#223354', color: '#223354' }}>
+            <Button onClick={onClose} variant="contained" color="error">
               <HighlightOffIcon />
               Cancelar
             </Button>
-            <Button type="submit" variant="contained" color="primary" sx={{ margin: "10px", backgroundColor: "#223354" }}  >
+            <Button type="submit" variant="contained"  >
               <SaveOutlinedIcon />
                Guardar
             </Button>
           </DialogActions>
+
+          <style jsx>
+            {`
+              .cancel{
+                color: #FFFFFF;
+                text-decoration: none;
+              }`
+            }
+          </style>
       </Dialog>
   );
 };

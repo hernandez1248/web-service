@@ -11,7 +11,7 @@ const ModalContentAddOrder = ({ open, handleClose }) => {
 
   const [devicesId, setDeviceId] = React.useState('');
   const [ordersId, setOrderId] = React.useState('');
-
+ 
 
   const [categoriesDevice, setCategoriesDevice] = useState([]);
   const [categoriesUser, setCategoriesUser] = useState([]);

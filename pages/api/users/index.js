@@ -71,14 +71,14 @@ const listUsers = async (req, res) => {
 
 //POST: usuarios
 const addUsers = async (req, res) => {
+  const datosUsuario = { ...req.body };
   try {
     //validar que venga la contraseña
-    if (!req.body.password) {
+    /*if (!req.body.password) {
       return res.status(400).json({ message: "La contraseña es obligatoria" });
     }
 
     //datos del usuario
-    const datosUsuario = { ...req.body };
 
     // validar contrasena antes de cifrar
     if (datosUsuario.password.length < 8) {
@@ -95,15 +95,17 @@ const addUsers = async (req, res) => {
         ],
       });
     }
-
+    */
     //asegurar la contraseña
     //usar bcrypt
     //salt: generación de una cadena aleatoria deN longitud
-    const salt = await bcrypt.genSalt(10);
+    if(req.body.password){
+      const salt = await bcrypt.genSalt(10);
 
-    //cifrar la contraseña y meterla en los datos del usuario
-    datosUsuario.password = await bcrypt.hash(datosUsuario.password, salt);
-
+      //cifrar la contraseña y meterla en los datos del usuario
+      datosUsuario.password = await bcrypt.hash(datosUsuario.password, salt);
+    }
+    
     //guardar los datos del cliente
     const user = await db.User.create(datosUsuario);
 
@@ -111,18 +113,22 @@ const addUsers = async (req, res) => {
 
     res.json({ message: "El usuario ha sido registrado.", user });
   } catch (error) {
-    console.log(error);
 
     let errors = [];
-
     if (error.errors) {
       //extraer la información de los campos que tienen error
       errors = error.errors.map((item) => ({
         error: item.message,
         field: item.path,
       }));
+      
+      if (datosUsuario.password.length < 8) {
+        errors.push({
+          error: "La contrasena debe tener una longitud >= 8 carácteres.",
+          field: 'password',
+        });
+      }
     }
-
     return res
       .status(400)
       .json({
