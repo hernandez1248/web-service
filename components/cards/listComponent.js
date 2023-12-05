@@ -6,7 +6,6 @@ import { Card, CardActions, CardContent, Typography, Button, Box, CardMedia, Gri
 import EditComponentModal from "../modals/editComponentModal";
 import WarningIcon from "@mui/icons-material/Warning";
 
-
 const getStockColor = (stock) => {
   return stock < 10
     ? "red"

@@ -153,7 +153,6 @@ const CardComponent = () => {
     setCurrentPage(newPage);
   };
 
-  
   return (
     <Box>
       <Paper>
