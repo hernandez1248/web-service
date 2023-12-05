@@ -72,7 +72,7 @@ function EditUserModal({ open, user, onClose, onUpdate }) {
       <DialogContent>
         <DialogContentText>
           <Grid container spacing={2} mt={0}>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="name"
                 label="Nombre"
@@ -90,7 +90,7 @@ function EditUserModal({ open, user, onClose, onUpdate }) {
                 })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="lastName"
                 label="Apellido"
@@ -144,7 +144,7 @@ function EditUserModal({ open, user, onClose, onUpdate }) {
                 })}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
                 <TextField
                   id="email"
                   label="Email"
@@ -162,7 +162,7 @@ function EditUserModal({ open, user, onClose, onUpdate }) {
                   })}
                 />
               </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel htmlFor="rol">Rol</InputLabel>
                 <Select

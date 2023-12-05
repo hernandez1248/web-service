@@ -77,7 +77,7 @@ export default function AddUser({ recharge }) {
 
   return (
     <div>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box item xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={handleClickOpen}
           sx={{ margin: "10px", backgroundColor: "#223354"}}
@@ -103,6 +103,9 @@ export default function AddUser({ recharge }) {
             justifyContent: "center",
             fontSize: 25,
             fontWeight: "bold",
+            backgroundColor: "rgba(75, 114, 139, 0.05)",
+            borderRadius: 3,
+            color: "rgba(75, 114, 139, 1)"
           }}
         >
           Agregar Usuario
@@ -110,7 +113,7 @@ export default function AddUser({ recharge }) {
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             <Grid container spacing={2} mt={0}>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="name"
                   variant="outlined"
@@ -119,7 +122,7 @@ export default function AddUser({ recharge }) {
                   error={!!errors.name}
                   helperText={errors.name?.message}
                   {...register("name", {
-                    required: "Este campo es obligatorio",
+                    required: "El nombre es obligatorio",
                     pattern: {
                       value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$/g,
                       message: "El nombre solo debe contener letras",
@@ -127,7 +130,7 @@ export default function AddUser({ recharge }) {
                   })}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="lastName"
                   variant="outlined"
@@ -136,7 +139,7 @@ export default function AddUser({ recharge }) {
                   error={!!errors.lastName}
                   helperText={errors.lastName?.message}
                   {...register("lastName", {
-                    required: "Este campo es obligatorio",
+                    required: "El apellido es obligatorio",
                     pattern: {
                       value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$/g,
                       message: "El apellido solo debe contener letras",
@@ -153,7 +156,7 @@ export default function AddUser({ recharge }) {
                   error={!!errors.phone}
                   helperText={errors.phone?.message}
                   {...register("phone", {
-                    required: "Este campo es obligatorio",
+                    required: "El número de teléfono es obligatorio",
                     pattern: {
                       value: /^[0-9]{10}$/,
                       message:"Ingresa un número de teléfono válido (10 dígitos)",
@@ -170,15 +173,15 @@ export default function AddUser({ recharge }) {
                   error={!!errors.image}
                   helperText={errors.image?.message}
                   {...register("image", {
-                    required: "Este campo es obligatorio",
+                    required: "La imagen es obligatorio",
                     pattern: {
                       value: /^(https?|ftp|file):\/\/.+$/,
-                      message: "La URL del avatar no es válida. Debe ser una URL completa",
+                      message: "La URL de la imagen no es válida. Debe ser una URL completa",
                     },
                   })}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="email"
                   fullWidth
@@ -186,7 +189,7 @@ export default function AddUser({ recharge }) {
                   error={!!errors.email}
                   helperText={errors.email?.message}
                   {...register("email", {
-                    required: "El Email es Obligatorio",
+                    required: "El email es Obligatorio",
                     pattern: {
                       value: /(.+)@(.+){2,}\.(.+){3,}/i,
                       message: "No es un email Válido",
@@ -194,7 +197,7 @@ export default function AddUser({ recharge }) {
                   })}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="password"
                   fullWidth
@@ -203,7 +206,7 @@ export default function AddUser({ recharge }) {
                   helperText={errors.password?.message}
                   type={showPassword ? "text" : "password"}
                   {...register("password", {
-                    required: "Este campo es obligatorio",
+                    required: "La contraseña es obligatorio",
                     minLength: 8,
                     pattern: {
                       value:
