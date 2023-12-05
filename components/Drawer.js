@@ -1,12 +1,21 @@
 import { useSession } from "next-auth/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MiniDrawerEmployee from "./MiniDrawerEmployee";
 import MiniDrawer from "./MiniDrawer";
 
 const Drawer = (props) => {
+  //const [isAdmin, setIsAdmin] = useState(false);
   const { data: session } = useSession();
-  console.log(session);
-  const isAdmin = session?.rol === "administrador";
+  const isAdmin = session?.user?.rol === "administrador";
+  /*
+  useEffect(() => { 
+
+    setIsAdmin(
+      session.user?.rol === "administrador"
+    );
+  }, session);
+  */
+  
   if (isAdmin) {
     return (
       <MiniDrawer>

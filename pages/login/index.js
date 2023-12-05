@@ -173,9 +173,9 @@ const LoginPage = () => {
 // si logra ser autenticado, regresarlo a la página que intentó acceder
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
-
-  let { p = "home" } = query;
-  if(session?.rol == 'empleado') {
+ 
+let { p = "home" } = query;
+  if(session?.user?.rol == 'empleado') {
     p = 'homeEmployee';
   }
 
