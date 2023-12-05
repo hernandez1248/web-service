@@ -176,7 +176,7 @@ export const getServerSideProps = async ({ req, query }) => {
 
   let { p = "home" } = query;
   if(session?.rol == 'empleado') {
-    p = 'users';
+    p = 'homeEmployee';
   }
 
   if (session) {
