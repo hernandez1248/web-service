@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "admin",
-    "password": "VBWzSdcf",
+    "password": "AWt5HTs5",
     "database": "db_solutions",
-    "host": "mysql-156849-0.cloudclusters.net",
-    "port": "16631",
+    "host": "mysql-156971-0.cloudclusters.net",
+    "port": "15871",
     "dialect": "mysql"
   },
   "test": {
