@@ -16,10 +16,10 @@
   },
   "production": {
     "username": "admin",
-    "password": "lb6p0Snu",
-    "database": "9a_23",
-    "host": "mysql-137628-0.cloudclusters.net",
-    "port": "10053",
+    "password": "AWt5HTs5",
+    "database": "db_solutions",
+    "host": "mysql-156971-0.cloudclusters.net",
+    "port": "15871",
     "dialect": "mysql"
   }
 }
