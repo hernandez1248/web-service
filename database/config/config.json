@@ -1,9 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": "Mendoz@1",
-    "database": "db_test",
-    "host": "127.0.0.1",
+    "username": "admin",
+    "password": "VBWzSdcf",
+    "database": "db_solutions",
+    "host": "mysql-156849-0.cloudclusters.net",
+    "port": "16631",
     "dialect": "mysql"
   },
   "test": {
