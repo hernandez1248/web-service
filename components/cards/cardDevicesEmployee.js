@@ -168,16 +168,13 @@ const CardDevicesEmployee = () => {
   };
 
   return (
-    <Box>
+    <Box mt={2}>
       <Paper>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {<AddDevice recharge={loadDevices} />}
-        </Box>
-
         <Grid container spacing={2} sx={{ display: 'flex', alignItems: 'center' }}>
 
           <Grid item xs={12} md={6}>
             <TextField
+              sx={{ marginRight: "10px", marginLeft: "10px" }}
               placeholder="Buscar dispositivo"
               variant="outlined"
               value={searchTerm}
@@ -197,6 +194,7 @@ const CardDevicesEmployee = () => {
             <FormControl fullWidth>
               <InputLabel id="categoryDevice-id">Categoria</InputLabel>
               <Select
+                sx={{ marginRight: "10px", marginLeft: "10px" }}v
                 id="categoryDevice-id"
                 label="Categoria"
                 value={categorydeviceSelected}

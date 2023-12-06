@@ -164,6 +164,7 @@ const CardComponent = () => {
           <FormControl fullWidth>
             <InputLabel id="device-id">Dispositivo</InputLabel>
                 <Select 
+                  sx={{ marginRight: "10px", marginLeft: "10px" }}
                   id="device-id" 
                   label="Dispositivo"
                   value={deviceSelected}
@@ -178,6 +179,7 @@ const CardComponent = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
+            sx={{ marginRight: "5px", marginLeft: "-10px" }}
             placeholder="Buscar componente"
             variant="outlined"
             value={searchTerm}

@@ -178,6 +178,7 @@ const CardDevices = () => {
 
           <Grid item xs={12} md={6}>
             <TextField
+              sx={{ marginRight: "10px", marginLeft: "10px" }}
               placeholder="Buscar dispositivo"
               variant="outlined"
               value={searchTerm}
@@ -197,6 +198,7 @@ const CardDevices = () => {
             <FormControl fullWidth>
               <InputLabel id="categoryDevice-id">Categoria</InputLabel>
               <Select
+                sx={{ marginRight: "10px", marginLeft: "10px" }}
                 id="categoryDevice-id"
                 label="Categoria"
                 value={categorydeviceSelected}

@@ -154,16 +154,14 @@ const CardComponentEmployee = () => {
   };
 
   return (
-    <Box>
+    <Box mt={2}>
       <Paper>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {<ModalContentAddComponent recharge={loadComponents} />}
-        </Box>
         <Grid container spacing={2} sx={{ display: 'flex', alignItems: 'center'}}>
         <Grid item xs={12} md={6} spacing={2}>
           <FormControl fullWidth>
             <InputLabel id="device-id">Dispositivo</InputLabel>
                 <Select 
+                  sx={{ marginRight: "10px", marginLeft: "10px" }}
                   id="device-id" 
                   label="Dispositivo"
                   value={deviceSelected}
@@ -178,6 +176,7 @@ const CardComponentEmployee = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
+            sx={{ marginRight: "5px", marginLeft: "-10px" }}
             placeholder="Buscar componente"
             variant="outlined"
             value={searchTerm}
