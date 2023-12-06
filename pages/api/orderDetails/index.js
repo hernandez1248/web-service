@@ -3,55 +3,42 @@ import db from "database/models"//responsable de detectar el tipo de requestS
 export default function handler(req,res) {
     switch(req.method) {
         case 'GET':
-            return statesList(req, res);
+            return orderDetailsList(req, res);
         case 'DELETE':
-            return statesDelete(req, res);
-        case 'PATCH':
-            return statesUpdate(req, res);
+            return orderDetailsDelete(req, res);
+        case 'PATCH': 
+            return orderDetailsUpdate(req, res);
         case 'POST':
-            return statesAdd(req, res);            
+            return orderDetailsAdd(req, res);            
         default:
             res.status(400).json({error: true, message: "Peticion errónea"})
     }
 }
 
-
-const statesList = async (req, res) => {
+const orderDetailsList = async (req, res) => {
     try {
-        //leer el state a filtrar
+        //leer el detailss a filtrar
         const { ordersId } = req.query;
-        const { queryState } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
         //leer los estados
-        let states = [];
+        let orderDetails = [];
         if (ordersId) {
-            states = await db.State.findAll({
+            orderDetails = await db.Orderdetails.findAll({
             where: {
                 ordersId,
             },
                 include: ['order'],
             });
-        }else if(queryState){
-            
-            states = await db.State.findAll({
-                where: {
-                    [Op.or]: [{
-                    name: {//[Op.like]: 'tra%'
-                        [Op.like]: queryState+'%'
-                    }}
-                ]
-            },
-            });
         }else {
-            states = await db.State.findAll({
+            orderDetails = await db.Orderdetails.findAll({
                 include: ['order'],
             })
         }
 
 
-        return res.json(states);
+        return res.json(orderDetails);
     } catch(error) {
         console.log(error)
         return res.status(400).json(
@@ -64,17 +51,17 @@ const statesList = async (req, res) => {
     }
 }
 
-const statesAdd = async (req, res) => {
+const orderDetailsAdd = async (req, res) => {
     try {
         //los datos vienen en el req.body
         console.log(req.body);
 
-        //guardar el state
-        const states = await db.State.create({ ...req.body});
+        //guardar el detailss
+        const orderDetails = await db.Orderdetails.create({ ...req.body});
 
         res.json({
-            states,
-            message: 'El estado de la orden se registró correctamente'
+            orderDetails,
+            message: 'El detalle de la orden se registró correctamente'
         });
 
     } catch(error) {
@@ -101,15 +88,14 @@ const statesAdd = async (req, res) => {
     }
 }
 
-const statesUpdate = async (req, res) => {
+const orderDetailsUpdate = async (req, res) => {
     try {
         //los datos vienen en el req.body
-
         const {id} = req.body;
         console.log(req.body);
 
         //guardar el cliente
-        const states = await db.State.update({ 
+        const orderDetails = await db.Orderdetails.update({ 
             ...req.body
         },{ where: {
             id,
@@ -117,14 +103,14 @@ const statesUpdate = async (req, res) => {
             include: ['order'],
         });
 
-        const state = states[0];
-        if (state === 0) {
-            return res.status(404).json({ message: 'El estado seleccionadap no fue encontrada' });
+        const detailss = orderDetails[0];
+        if (detailss === 0) {
+            return res.status(404).json({ message: 'El detalle de orden seleccionado no fue encontrada' });
           }
 
         return res.json({
-            states,
-            message: "El estado fue actualizado correctamente"
+            orderDetails,
+            message: "El detalle de orden fue actualizado correctamente"
         });
 
     } catch(error) {
@@ -151,32 +137,32 @@ const statesUpdate = async (req, res) => {
     }
 }
 
-const statesDelete = async (req, res) => {
+const orderDetailsDelete = async (req, res) => {
     try {
       const { id } = req.query;
   
       // Verificar si el usuario existe antes de eliminarlo
-      const state = await db.State.findOne({
+      const detailss = await db.Orderdetails.findOne({
         where: {
           id
         },
       });
   
-      if (!state) {
+      if (!detailss) {
         return res.status(404).json({
           error: true,
-          message: "El estado no existe.",
+          message: "El detalle de orden no existe.",
         });
       }
   
       // Eliminar el usuario existente
-      await db.State.destroy({
+      await db.Orderdetails.destroy({
         where: {
           id
         },
       });
       res.json({
-        message: "El estado ha sido eliminado.",
+        message: "El detalle de orden ha sido eliminado.",
       });
     } catch (error) {
       console.log(error);

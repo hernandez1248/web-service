@@ -58,16 +58,20 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, account, user }) {
       console.log("jwt");
-      //console.log({ token, account, user });
-      //token.userRole = "admin"
+      console.log({ token, account, user });
+      if(user){        
+      token.rolUser= user.rol;
+      token.id = user.id;
+      }       
       
+      //token.userRole = "admin"
       return token
     },
+    
     async session({ session, token, user }){
-      console.log("session");
-      console.log({ session, token, user });
       //session.user = token.session?.user;
-      //session.userRole = token.userRole;
+      session.user.rol = token.rolUser;
+      session.user.id= token.id;
 
       return session;
     }

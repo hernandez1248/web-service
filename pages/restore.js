@@ -106,7 +106,7 @@ const Restore = () => {
           </Button>
           <Grid container sx={{ mt: 3, textAlign: 'center',}}>
             <Grid item xs>
-              <Link href="login" variant="body2">
+              <Link href="/login" variant="body2">
                 ¿Recuerdas tu contraseña?
               </Link>
             </Grid>

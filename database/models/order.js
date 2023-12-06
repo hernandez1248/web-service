@@ -84,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: "El color es obligatorio",
           },
           is: {
-            args: /^([a-zA-Z]+\s*)+$/,
+            args: /^([a-zA-Z 0-9 #]+\s*)+$/,
             msg: "Debe ingresar un color válido",
           },
         },

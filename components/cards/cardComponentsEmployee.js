@@ -6,11 +6,11 @@ import { useState } from 'react';
 import Swal from "sweetalert2";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
-import ListComponents from './listComponent';
+import ListComponentsEmployee from './listComponentEmployee';
 import ModalContentAddComponent from '../modals/addComponents';
 
 
-const CardComponent = () => {  
+const CardComponentEmployee = () => {  
   //almacenara los datos de los usuarios
   const [components, setComponents] = useState([]);
   const [filteredComponents, setFilteredComponents] = useState([]);
@@ -105,7 +105,7 @@ const CardComponent = () => {
     const currentComponents = filteredComponents.slice(indexOfFirstComponent, indexOfLastComponent);
 
     return currentComponents.map((component) => (
-      <ListComponents
+      <ListComponentsEmployee
         component={component}
         onDelete={deleteComponent}
         onSaved={loadComponents}
@@ -210,4 +210,4 @@ const CardComponent = () => {
   );
 }
 
-export default CardComponent;
+export default CardComponentEmployee;

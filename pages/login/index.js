@@ -106,7 +106,7 @@ const LoginPage = () => {
             autoComplete="email"
             autoFocus
             {...register("email", {
-              required: "Este campo es requerido",
+              required: "El correo es requerido",
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
@@ -120,7 +120,7 @@ const LoginPage = () => {
             id="password"
             autoComplete="current-password"
             {...register("password", {
-              required: "Este campo es requerido",
+              required: "La contraseña es requerida",
             })}
             error={!!errors.password}
             helperText={errors.password?.message}
@@ -173,8 +173,11 @@ const LoginPage = () => {
 // si logra ser autenticado, regresarlo a la página que intentó acceder
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
-
-  const { p = "home" } = query;
+ 
+let { p = "home" } = query;
+  if(session?.user?.rol == 'empleado') {
+    p = 'homeEmployee';
+  }
 
   if (session) {
     return {

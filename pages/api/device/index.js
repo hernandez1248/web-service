@@ -19,49 +19,44 @@ export default function handler(req,res) {
 
 const deviceList = async (req, res) => {
     try {
+        
         //leer el Device a filtrar
-        const { deviceId } = req.query;
-        const { queryDevice } = req.query;
+        const { brand, deviceId, deviceCategoryId} = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
         //leer los Device
         let devices = [];
-        if (deviceId) {
-            devices = await db.Device.findAll({
-            where: {
-                id:deviceId,
-            },
-                include: ['deviceCategory','component','order'],
-            });
-
-            //console.log(devices);
-            if (Object.keys(devices).length === 0) {
-                return res.status(404).json({ message: 'Dispositivo no encontrado' });
-                }
-
-                return res.json({ devices,message: 'Dispositivo encontrado' });
-        }else if(queryDevice){
-            
-            devices = await db.Device.findAll({
-                where: {
-                    [Op.or]: [{
-                    model: {//[Op.like]: 'tra%'
-                        [Op.like]: queryDevice+'%'
-                    }}
-                ]
-            },
-            });
-
-            return res.json({ devices,message: 'Dispositivos encontrado' });
-        }else {
-            devices = await db.Device.findAll({
-                include: ['deviceCategory','component','order'],
-            })
+        if (brand) {
+            devices = {
+                [Op.or]: [{
+                    brand: {//[Op.like]: 'tra%'
+                        [Op.like]: `%${brand}%`,
+                    },
+                }],
+            };
         }
+        
+        if (deviceId) {
+            devices = {
+              ...devices,
+              deviceId,
+            };
+          }
 
+          if (deviceCategoryId) {
+            devices = {
+              ...devices,
+              deviceCategoryId,
+            };
+          }        
 
-        return res.json(devices);
+        const dispositivos = await db.Device.findAll({
+            where: devices,
+            include: ['deviceCategory','component','order'],
+        });
+
+        return res.json(dispositivos);
     } catch(error) {
         console.log(error)
         return res.status(400).json(

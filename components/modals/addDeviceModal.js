@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,25 +6,32 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import PeopleIcon from "@mui/icons-material/People";
-import { Box, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import apiClient from "@/apiClient";
 import Swal from "sweetalert2";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import AddIcon from "@mui/icons-material/Add";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AddUser({ recharge }) {
+export default function AddDevice({ recharge }) {
   const [open, setOpen] = React.useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [devicesId, setComponentId] = React.useState("");
+  const [categories, setCategoriesDevice] = useState([]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -48,13 +55,14 @@ export default function AddUser({ recharge }) {
 
   const onSubmit = (data) => {
     console.log(data);
-    apiClient.post("/api/users", data)
+    apiClient
+      .post("/api/device", data)
       .then((response) => {
         Swal.fire({
           position: "center",
           icon: "success",
           text: response.data.message,
-          confirmButtonText: "Aceptar"
+          confirmButtonText: "Aceptar",
         });
         setOpen(false);
         recharge();
@@ -62,11 +70,12 @@ export default function AddUser({ recharge }) {
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response?.data?.message || 'Error al registrar el usuario');
+        alert(
+          error.response?.data?.message || "Error al registrar el dispositivo"
+        );
         if (error.response?.data?.errors) {
           error.response.data.errors.forEach((errorItem) => {
             setError(errorItem.field, {
-              //error: true,
               type: "validation",
               message: errorItem.error,
             });
@@ -75,17 +84,28 @@ export default function AddUser({ recharge }) {
       });
   };
 
+  useEffect(() => {
+    apiClient
+      .get("/api/categories")
+      .then((response) => {
+        setCategoriesDevice(response.data || []);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div>
-      <Box item xs={6} md={3} sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={handleClickOpen}
-          sx={{ margin: "10px", backgroundColor: "#223354"}}
+          sx={{ margin: "10px", backgroundColor: "#223354" }}
           variant="contained"
           color="primary"
-          startIcon={<PeopleIcon />}
+          startIcon={<AddIcon />}
         >
-          Agregar Usuario
+          Agregar dispositivo
         </Button>
       </Box>
       <Dialog
@@ -103,127 +123,94 @@ export default function AddUser({ recharge }) {
             justifyContent: "center",
             fontSize: 25,
             fontWeight: "bold",
-            backgroundColor: "rgba(75, 114, 139, 0.05)",
-            borderRadius: 3,
-            color: "rgba(75, 114, 139, 1)"
           }}
         >
-          Agregar Usuario
+          Agregar Dispositivo
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             <Grid container spacing={2} mt={0}>
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="name"
+                  id="brand"
                   variant="outlined"
                   fullWidth
-                  label="Nombre"
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                  {...register("name", {
-                    required: "El nombre es obligatorio",
+                  label="Marca del dispositivo"
+                  error={!!errors.brand}
+                  helperText={errors.brand?.message}
+                  {...register("brand", {
+                    required: "Este campo es obligatorio",
                     pattern: {
                       value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$/g,
-                      message: "El nombre solo debe contener letras",
+                      message:
+                        "El nombre de la marca solo debe contener letras",
                     },
                   })}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="lastName"
+                  id="model"
                   variant="outlined"
                   fullWidth
-                  label="Apellido"
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message}
-                  {...register("lastName", {
-                    required: "El apellido es obligatorio",
+                  label="Modelo del dispositivo"
+                  error={!!errors.model}
+                  helperText={errors.model?.message}
+                  {...register("model", {
+                    required: "Este campo es obligatorio",
                     pattern: {
-                      value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$/g,
-                      message: "El apellido solo debe contener letras",
+                      value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ 0-9]+$/i,
+                      message: "No es un modelo valido.",
                     },
                   })}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
-                  id="phone"
-                  variant="outlined"
-                  fullWidth
-                  label="Número de teléfono"
-                  error={!!errors.phone}
-                  helperText={errors.phone?.message}
-                  {...register("phone", {
-                    required: "El número de teléfono es obligatorio",
-                    pattern: {
-                      value: /^[0-9]{10}$/,
-                      message:"Ingresa un número de teléfono válido (10 dígitos)",
-                    },
-                  })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  id="avatar"
+                  id="image"
                   variant="outlined"
                   fullWidth
                   label="URL image"
                   error={!!errors.image}
                   helperText={errors.image?.message}
                   {...register("image", {
-                    required: "La imagen es obligatorio",
+                    required: "Este campo es obligatorio",
                     pattern: {
                       value: /^(https?|ftp|file):\/\/.+$/,
-                      message: "La URL de la imagen no es válida. Debe ser una URL completa",
+                      message:
+                        "La URL de la imagen no es válida. Debe ser una URL completa",
                     },
                   })}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  id="email"
-                  fullWidth
-                  label="Email"
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  {...register("email", {
-                    required: "El email es Obligatorio",
-                    pattern: {
-                      value: /(.+)@(.+){2,}\.(.+){3,}/i,
-                      message: "No es un email Válido",
-                    },
-                  })}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  id="password"
-                  fullWidth
-                  label="Contraseña"
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
-                  type={showPassword ? "text" : "password"}
-                  {...register("password", {
-                    required: "La contraseña es obligatorio",
-                    minLength: 8,
-                    pattern: {
-                      value:
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/,
-                      message:"La contraseña debe tener mínimo 8 caracteres, una letra mayúscula, una minúscula, al menos un dígito y al menos un carácter especial",
-                    },
-                  })}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={togglePasswordVisibility}>
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+
+              <Grid item xs={12}>
+                <FormControl sx={{ m: 0 }} fullWidth>
+                  <InputLabel id="demo-simple-select-autowidth-label">
+                    Categoria del dispositivo
+                  </InputLabel>
+                  <Select
+                    id="deviceCategoryId"
+                    {...register("deviceCategoryId", {
+                      required: "*Este campo es obligatorio.",
+                      pattern: {
+                        message: "No es un dispositivo valido.",
+                      },
+                    })}
+                    onChange={(ev) => setComponentId(ev.target.value)}
+                    fullWidth
+                    label="Categoria del dispositivo"
+                    error={!!errors.deviceCategoryId}
+                    helperText={errors.deviceCategoryId?.message}
+                  >
+                    {categories.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </DialogContentText>

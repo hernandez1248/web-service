@@ -23,9 +23,9 @@ import AddDevice from "../modals/addDeviceModal";
 import Swal from "sweetalert2";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@mui/material/Pagination";
-import ListDevice from "./listDevice";
+import ListDeviceEmployee from "./listDeviceEmployee";
 
-const CardDevices = () => {
+const CardDevicesEmployee = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDevices, setFilteredDevices] = useState([]);
   const [devices, setDevices] = useState([]);
@@ -118,7 +118,7 @@ const CardDevices = () => {
     const currentDevices = filteredDevices.slice(indexOfFirstDevice, indexOfLastDevice);
 
     return currentDevices.map((device) => (
-      <ListDevice
+      <ListDeviceEmployee
         device={device}
         onDelete={deleteDevice}
         onSaved={loadDevices}
@@ -229,4 +229,4 @@ const CardDevices = () => {
   );
 };
 
-export default CardDevices;
+export default CardDevicesEmployee;
