@@ -1,9 +1,9 @@
 import React from 'react';
-import CardComponent from '@/components/cards/cardComponents';
+import CardComponentEmployee from '@/components/cards/cardComponentsEmployee';
 
 function ComponentsEmployee() {
   return (
-    <CardComponent />
+    <CardComponentEmployee />
   );
 }
 
