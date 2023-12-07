@@ -58,7 +58,7 @@ function ButtonClose({ user }) {
       confirmButtonText: 'Si, estoy seguro',
     }).then((result) => {
       if (result.isConfirmed) {
-        signOut({ callbackUrl: 'https://web-service-production-584c.up.railway.app/login' });
+        signOut({ callbackUrl: 'https://web-service-production-584c.up.railway.app' });
       }
     });
 
