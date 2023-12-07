@@ -174,7 +174,7 @@ const LoginPage = () => {
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
  
-let { p = "home" } = query;
+let { p = "https://web-service-production-584c.up.railway.app/home" } = query;
   if(session?.user?.rol == 'empleado') {
     p = 'homeEmployee';
   }
