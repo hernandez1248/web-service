@@ -422,6 +422,28 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
 
                                     <Grid item xs={12} md={4}>
                                         <Typography variant="body1">
+                                            <strong>Pago total:</strong>{" "}
+                                            ${order.fullPay}
+                                        </Typography>
+                                    </Grid>
+
+
+                                    <Grid item xs={12} md={5}>
+                                        <Typography variant="body1">
+                                            <strong>Pago adelantado:</strong>{" "}
+                                            ${order.advancePay}
+                                        </Typography>
+                                    </Grid>                                    
+
+                                    <Grid item xs={12} md={3}>
+                                        <Typography variant="body1">
+                                            <strong>Pago restante:</strong>{" "}
+                                            ${order.remainingPay}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12} md={4}>
+                                        <Typography variant="body1">
                                             <strong>Generada por:</strong>{" "}
 
                                             {userGenerateOrder.users && userGenerateOrder.users.map(user => (
