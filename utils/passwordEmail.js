@@ -15,7 +15,7 @@ exports.passwordEmail = async (name, email, token) => {
     // mensaje
     let message = `Hola, ${name}<br>`;
     message += "Has solicitado restaurar tu contraseña, "; 
-    message += `<a href ="http://localhost:3000/recover-password/${token}">Haz click aquí</a><br><br>`;
+    message += `<a href ="https://web-service-production-584c.up.railway.app/recover-password/${token}">Haz click aquí</a><br><br>`;
     message += "El enlace es valido por una hora.";
 
     let info = await transporter.sendMail({
