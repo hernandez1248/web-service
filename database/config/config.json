@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "admin",
-    "password": "AWt5HTs5",
+    "password": "1hpChW0V",
     "database": "db_solutions",
-    "host": "mysql-156971-0.cloudclusters.net",
-    "port": "15871",
+    "host": "mysql-156979-0.cloudclusters.net",
+    "port": "18270",
     "dialect": "mysql"
   },
   "test": {
@@ -16,10 +16,10 @@
   },
   "production": {
     "username": "admin",
-    "password": "AWt5HTs5",
+    "password": "1hpChW0V",
     "database": "db_solutions",
-    "host": "mysql-156971-0.cloudclusters.net",
-    "port": "15871",
+    "host": "mysql-156979-0.cloudclusters.net",
+    "port": "18270",
     "dialect": "mysql"
   }
 }
