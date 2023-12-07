@@ -143,7 +143,7 @@ function Home({ user }) {
           display: "flex",
           justifyContent: "center",
           marginTop: 14,
-          marginBottom: 60,
+          marginBottom: 2,
         }}
       >
         <Button
@@ -152,10 +152,10 @@ function Home({ user }) {
           sx={{
             marginTop: 2,
             fontWeight: "bold",
-            fontSize: 16, // Ajusta el tamaño de la fuente según sea necesario
-            padding: "10px 30px", // Ajusta el padding según sea necesario
+            fontSize: 16,
+            padding: "10px 30px", 
             width: '300px',
-            marginBottom: 60,
+            marginBottom: 4,
           }}
           onClick={handleLoginClick}
         >
