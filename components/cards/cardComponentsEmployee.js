@@ -156,9 +156,6 @@ const CardComponentEmployee = () => {
   return (
     <Box>
       <Paper>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {<ModalContentAddComponent recharge={loadComponents} />}
-        </Box>
         <Grid container spacing={2} sx={{ display: 'flex', alignItems: 'center'}}>
         <Grid item xs={12} md={6} spacing={2}>
           <FormControl fullWidth>
