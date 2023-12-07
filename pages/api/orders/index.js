@@ -1,24 +1,24 @@
 import db from "database/models"//responsable de detectar el tipo de request 
 //e invocar a la funcion adecuada
-export default function handler(req,res) {
-    switch(req.method) {
+export default function handler(req, res) {
+    switch (req.method) {
         case 'GET':
             return orderList(req, res);
         case 'DELETE':
             return orderDelete(req, res);
         case 'PATCH':
-            return orderUpdate(req,res);
+            return orderUpdate(req, res);
         case 'POST':
-            return orderAdd(req,res);            
+            return orderAdd(req, res);
         default:
-            res.status(400).json({error: true, message: "Peticion errónea"})
+            res.status(400).json({ error: true, message: "Peticion errónea" })
     }
 }
 
 const orderList = async (req, res) => {
     try {
         //leer el Order a filtrar      
-        const { orderId, dateRegister, fullName, servicesId, status, userId} = req.query;
+        const { orderId, dateRegister, fullName, servicesId, status, userId } = req.query;
 
         //Proporcion de operadores
         const { Op } = require("sequelize");
@@ -26,7 +26,7 @@ const orderList = async (req, res) => {
         let orders = [];
 
         let states = [];
-        
+
         if (fullName) {
             orders = {
                 [Op.or]: [{
@@ -38,12 +38,12 @@ const orderList = async (req, res) => {
         }
         if (servicesId) {
             orders = {
-              ...orders,
-              servicesId,
+                ...orders,
+                servicesId,
             };
         }
 
-        if(status){
+        if (status) {
             states = await db.State.findAll({
                 where: {
                     status,
@@ -51,20 +51,20 @@ const orderList = async (req, res) => {
                 attributes: ['ordersId'], // Seleccionar solo el ID de las órdenes
                 raw: true, // Obtener resultados como objetos simples
                 //include: ['order'],
-                }); 
+            });
 
-                const filterStatusOrderId = states.map(state => state.ordersId);
-            
-                orders = {
-                    ...orders,
-                    id:filterStatusOrderId,
-                  };
+            const filterStatusOrderId = states.map(state => state.ordersId);
+
+            orders = {
+                ...orders,
+                id: filterStatusOrderId,
+            };
         }
 
         if (userId) {
             orders = {
-              ...orders,
-              userId,
+                ...orders,
+                userId,
             };
         }
 
@@ -124,26 +124,26 @@ const orderList = async (req, res) => {
         }*/
         const ordenes = await db.Order.findAll({
             where: orders,
-            include: ['servicescategory','device','user','orderdetails','state'],
+            include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
         });
 
         return res.json(ordenes);
-    } catch(error) {
+    } catch (error) {
         console.log(error)
         return res.status(400).json(
             {
                 error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+                message: `Ocurrio un error al procesar la peticion: ${error.message}`
             }
         )
-    
+
     }
 }
 
 const orderDelete = async (req, res) => {
     try {
         //leer la categoria a filtrar
-        const { orderSelected } = req.query;        
+        const { orderSelected } = req.query;
         //leer los Order
         let stateSearchDelete = [];
         let orderDetailsSearchDelete = [];
@@ -153,65 +153,66 @@ const orderDelete = async (req, res) => {
             stateSearchDelete = await db.State.destroy({
                 where: {
                     ordersId: orderSelected
-            },
+                },
                 include: ['order'],
             });
 
             orderDetailsSearchDelete = await db.Orderdetails.destroy({
                 where: {
                     ordersId: orderSelected
-            },
-                include: ['order','component'],
+                },
+                include: ['order', 'component'],
             });
 
 
             orders = await db.Order.destroy({
                 where: {
                     id: orderSelected
-            },
-                include: ['servicescategory','device','user','orderdetails','state'],
+                },
+                include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
             });
 
-            
+
             if (orders === 0) {
                 return res.status(404).json({ message: 'Orden no encontrada' });
-              }            
-            
-                return res.json({ orders,message: 'Eliminada correctamente' });
-        } 
-        
+            }
+
+            return res.json({ orders, message: 'Eliminada correctamente' });
+        }
+
         else {
             orders = await db.Order.findAll({
-                include: ['servicescategory','device','user','orderdetails','state'],
+                include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
             })
         }
         return res.json(orders);
-    } catch(error) {
+    } catch (error) {
         console.log(error)
         return res.status(400).json(
             {
                 error: true,
-                message: `Ocurrio un error al procesar la peticion: ${error.message}`        
+                message: `Ocurrio un error al procesar la peticion: ${error.message}`
             }
         )
-    
+
     }
 }
 
 const orderUpdate = async (req, res) => {
     try {
         //los datos vienen en el req.body
-        
-        const {id} = req.body;
+
+        const { id, advancePay } = req.body;
         console.log(req.body);
 
         //actualizar la orden
-        const orders = await db.Order.update({ 
+        const orders = await db.Order.update({
             ...req.body
-        },{ where: {
-            id
-        },
-            include: ['servicescategory','device','user','orderdetails','state'],
+        }, {
+            where: {
+                id
+            },
+            include: ['servicescategory', 'device', 'user', 'orderdetails', 'state'],
         });
 
 
@@ -232,15 +233,15 @@ const orderUpdate = async (req, res) => {
         //Object.keys(orders).length === 0
         if (order === 0) {
             return res.status(404).json({ message: 'La orden seleccionada no fue encontrada' });
-          }
-          
-          return res.json({ orders,message: 'La orden fue actualizada correctamente' });
+        }
 
-    } catch(error) {
+        return res.json({ orders, message: 'La orden fue actualizada correctamente' });
+
+    } catch (error) {
         console.log(error)
 
-        let errors =[];
-        if (error.errors){
+        let errors = [];
+        if (error.errors) {
             //extrae la informacion de los campos que tienen error
             errors = error.errors.map((item) => ({
                 error: item.message,
@@ -253,10 +254,10 @@ const orderUpdate = async (req, res) => {
             {
                 error: true,
                 message: `Ocurrio un error al procesar la peticion: ${error.message}`,
-                errors,      
+                errors,
             }
         )
-    
+
     }
 }
 
@@ -264,9 +265,9 @@ const orderAdd = async (req, res) => {
     try {
         //los datos vienen en el req.body
         console.log(req.body);
-        const { servicesId,deviceId,userId,fullName,phone,color,observations,fullPay,advancePay,remainingPay,detalles} = req.body;
-        const { componentsId, amountTotal,quantityComponent,unitPrice } = req.body;
-       
+        const { servicesId, deviceId, userId, fullName, phone, color, observations, fullPay, advancePay, remainingPay, detalles } = req.body;
+        const { componentsId, amountTotal, quantityComponent, unitPrice } = req.body;
+
 
         // se crea una orden asociada a sus detalles de la misma orden
         const newIdOrden = await db.Order.create({
@@ -277,31 +278,31 @@ const orderAdd = async (req, res) => {
             phone,
             color,
             observations,
-            fullPay:'0',
+            fullPay: '0',
             advancePay,
             remainingPay
         });
 
         const newState = await db.State.create({
-            ordersId:newIdOrden.id,
-            status:'Registrada',
-            description:"Se registro correctamente la orden"
+            ordersId: newIdOrden.id,
+            status: 'Registrada',
+            description: "Se registro correctamente la orden"
 
         })
 
         let moveDatePrice;
         let stockActual;
         let remaining;
-        
+
         //guardar los detalles de una orden
-        if(detalles){
+        if (detalles) {
             await Promise.all(
                 detalles.map(async (direccion) => {
 
-                const searchComponent = await db.Component.findAll({
-                    where: {
-                        id:direccion.componentsId,
-                    },
+                    const searchComponent = await db.Component.findAll({
+                        where: {
+                            id: direccion.componentsId,
+                        },
                         include: ['devices'],
                     });
 
@@ -315,8 +316,8 @@ const orderAdd = async (req, res) => {
                         // let resultadoSuma = parseFloat(moveDatePrice) + 11;
                         // console.log(resultadoSuma);
                         // console.log(stockActual + 11);
-                        return moveDatePrice,stockActual
-                        });
+                        return moveDatePrice, stockActual
+                    });
 
 
                     //Obtener el stock final
@@ -332,43 +333,44 @@ const orderAdd = async (req, res) => {
                     include: ['devices','orderdetail'],
                     });
                 */
-                    await db.Orderdetails.create({    
-                        ordersId:newIdOrden.id,
-                        componentsId:direccion.componentsId,
+                    await db.Orderdetails.create({
+                        ordersId: newIdOrden.id,
+                        componentsId: direccion.componentsId,
                         amountTotal, //se agrega en automatico
-                        quantityComponent:direccion.quantityComponent,
-                        unitPrice:moveDatePrice //se agrega en automatico
-                     });  
+                        quantityComponent: direccion.quantityComponent,
+                        unitPrice: moveDatePrice //se agrega en automatico
+                    });
 
 
-                    const actualizarStock = await db.Component.update({stock}, {
-                        where: { id:direccion.componentsId },
-                      });
-                    }
+                    const actualizarStock = await db.Component.update({ stock }, {
+                        where: { id: direccion.componentsId },
+                    });
+                }
                 ))
-                
+
         }
 
         // Calcula el monto total de los detalles de la orden
-        const totalAmount = await db.Orderdetails.sum('amountTotal', {
-        where: {
-            ordersId: newIdOrden.id, 
-        },
+        let totalAmount = await db.Orderdetails.sum('amountTotal', {
+            where: {
+                ordersId: newIdOrden.id,
+            },
         });
 
-        
-        if(advancePay > 0){
+        totalAmount = totalAmount + 200
+
+        if (advancePay > 0) {
             remaining = totalAmount - advancePay
-        }else{
+        } else {
             remaining = totalAmount - 0
         }
 
 
         if (totalAmount === undefined || totalAmount === null) {
-            newIdOrden.fullPay = 0; // Asigna cero si totalAmount es undefined o null
-          } else {
+            newIdOrden.fullPay = 200; // Asigna cero si totalAmount es undefined o null
+        } else {
             newIdOrden.fullPay = totalAmount; // Asigna el valor de totalAmount si es válido
-          }
+        }
         // Agrega el monto total al campo 'fullPay' de la orden generada
         //newIdOrden.fullPay = totalAmount;
         newIdOrden.remainingPay = remaining
@@ -379,15 +381,15 @@ const orderAdd = async (req, res) => {
 
 
         res.json({
-            newIdOrden,newState,
+            newIdOrden, newState,
             message: 'La orden se registro correctamente'
         });
 
-    } catch(error) {
+    } catch (error) {
         console.log(error)
 
-        let errors =[];
-        if (error.errors){
+        let errors = [];
+        if (error.errors) {
             //extrae la informacion de los campos que tienen error
             errors = error.errors.map((item) => ({
                 error: item.message,
@@ -400,9 +402,9 @@ const orderAdd = async (req, res) => {
             {
                 error: true,
                 message: `Ocurrio un error al procesar la peticion: ${error.message}`,
-                errors,      
+                errors,
             }
         )
-    
+
     }
 }
