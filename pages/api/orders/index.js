@@ -204,10 +204,16 @@ const orderUpdate = async (req, res) => {
 
         const { id, advancePay } = req.body;
         console.log(req.body);
+        //let remainingPay;
 
-        //actualizar la orden
+        const orderToUpdate = await db.Order.findByPk(id);
+        const fullPay = orderToUpdate.fullPay; // Obtiene el valor del fullPay de la orden
+
+        const remainingPay = fullPay - advancePay; // Calcula el remainingPay
+      
+        // Actualiza la orden con los nuevos datos, incluyendo remainingPay
         const orders = await db.Order.update({
-            ...req.body
+            ...req.body,remainingPay
         }, {
             where: {
                 id
