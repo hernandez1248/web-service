@@ -174,9 +174,9 @@ const LoginPage = () => {
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
  
-let { p = "home" } = query;
+let { p = "/home" } = query;
   if(session?.user?.rol == 'empleado') {
-    p = 'homeEmployee';
+    p = '/homeEmployee';
   }
 
   if (session) {
