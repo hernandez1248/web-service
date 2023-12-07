@@ -176,7 +176,7 @@ export const getServerSideProps = async ({ req, query }) => {
  
 let { p = "https://web-service-production-584c.up.railway.app/home" } = query;
   if(session?.user?.rol == 'empleado') {
-    p = '/homeEmployee';
+    p = 'https://web-service-production-584c.up.railway.app/homeEmployee';
   }
 
   if (session) {
