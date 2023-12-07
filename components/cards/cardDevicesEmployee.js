@@ -170,12 +170,7 @@ const CardDevicesEmployee = () => {
   return (
     <Box>
       <Paper>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {<AddDevice recharge={loadDevices} />}
-        </Box>
-
         <Grid container spacing={2} sx={{ display: 'flex', alignItems: 'center' }}>
-
           <Grid item xs={12} md={6}>
             <TextField
               placeholder="Buscar dispositivo"
