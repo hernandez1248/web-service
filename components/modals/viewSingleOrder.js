@@ -9,7 +9,7 @@ import {
     IconButton,
     Grid,
     Typography,
-    TableHead, 
+    TableHead,
     Table,
     TableContainer,
     TableCell,
@@ -43,7 +43,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 
 function ViewSingleOrderModal({ open, order, onClose, devices, states, details, userGenerateOrder, recharge, onSaved, rechargeDetails }) {
-    const { register, handleSubmit, formState: { errors }, reset} = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [stateOrder, setStates] = React.useState({ ...states });
     const [deviceOrder, setDevices] = React.useState({ ...devices });
     const [deviceId, setDeviceId] = React.useState('');
@@ -154,34 +154,49 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                 }
             });
     };
-    
+
     const deleteDetailOrder = (id) => {
-        console.log("ID a eliminar:", id); 
-        
+        console.log("ID a eliminar:", id);
+
         Swal.fire({
-          title: "¿Estás Seguro de eliminar?",
-          text: "Este detalle de orden se eliminara permanentemente",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-          confirmButtonText: "Si, eliminar",
-          
+            title: "¿Estás Seguro de eliminar?",
+            text: "Este detalle de orden se eliminara permanentemente",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Si, eliminar",
+
         })
-        .then((result) => {
-          if (result.isConfirmed) {
-            console.log("Eliminar detalle de orden con ID:", id); 
-            apiClient.delete(`/api/orderDetails?id=${id}`)
-              .then((response) => {
-                console.log("Respuesta del servidor:", response.data);
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  text: response.data.message,
-                  confirmButtonText: "Aceptar"
-                });
-                
+            .then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Eliminar detalle de orden con ID:", id);
+                    apiClient.delete(`/api/orderDetails?id=${id}`)
+                        .then((response) => {
+                            console.log("Respuesta del servidor:", response.data);
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                text: response.data.message,
+                                confirmButtonText: "Aceptar"
+                            });
+
+
+                            const swalContainer = document.querySelector(".swal2-container");
+
+                            // Establecer el zIndex directamente en el contenedor
+                            if (swalContainer) {
+                                swalContainer.style.zIndex = "9999";
+                            }
+                            rechargeDetails();
+                        })
+                        .catch((error) => {
+                            console.log("Error al eliminar detalle de orden:", error);
+                        });
+                }
+            });
+
 
         const swalContainer = document.querySelector(".swal2-container");
 
@@ -189,23 +204,8 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
         if (swalContainer) {
             swalContainer.style.zIndex = "9999";
         }
-                rechargeDetails();
-              })
-              .catch((error) => {
-                console.log("Error al eliminar detalle de orden:", error);
-              });
-          }
-        });
-        
+    };
 
-        const swalContainer = document.querySelector(".swal2-container");
-
-        // Establecer el zIndex directamente en el contenedor
-        if (swalContainer) {
-            swalContainer.style.zIndex = "9999";
-        }
-      };
-      
     // Función para formatear la fecha
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -274,28 +274,28 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
     const componentAddOrderDetail = selectedComponent.find(component => component.id === componentId);
 
     const totalPrice = componentAddOrderDetail?.price * selectedQuantity || 0;
-    
+
     useEffect(() => {
 
     }, [componentAddOrderDetail, totalPrice]);
- /*
-    console.log("///////////COMPONENTE////////////////");
-    console.log(selectedComponent);
-    console.log(componentId);
-    console.log("COMPONENTE SELECCIONADO");
-    console.log(componentAddOrderDetail);
-
-   useEffect(() => {
-        setDevices({ ...devices })
-    }, [devices]);*/
+    /*
+       console.log("///////////COMPONENTE////////////////");
+       console.log(selectedComponent);
+       console.log(componentId);
+       console.log("COMPONENTE SELECCIONADO");
+       console.log(componentAddOrderDetail);
+   
+      useEffect(() => {
+           setDevices({ ...devices })
+       }, [devices]);*/
 
 
     const onSubmitOrderDetailAdd = (data) => {
         //data.id = order.id;
         //data.color = selectedColor;
         data.unitPrice = componentAddOrderDetail?.price,
-        data.amountTotal = totalPrice,
-        data.ordersId = order.id
+            data.amountTotal = totalPrice,
+            data.ordersId = order.id
 
         console.log("Detalle a agregar:", order);
         apiClient.post(`/api/orderDetails`, data)
@@ -433,7 +433,7 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                                             <strong>Pago adelantado:</strong>{" "}
                                             ${order.advancePay}
                                         </Typography>
-                                    </Grid>                                    
+                                    </Grid>
 
                                     <Grid item xs={12} md={3}>
                                         <Typography variant="body1">
@@ -526,8 +526,27 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                                         </FormControl>
                                     </Grid>
 
-                                    <Grid item xs={12} md={3}>
 
+                                    <Grid item xs={12} md={3}>
+                                        <TextField
+                                            id="advancePay"
+                                            variant="outlined"
+                                            label="Pago por adelantado"
+                                            defaultValue={order.advancePay}
+                                            fullWidth
+                                            error={!!errors.advancePay}
+                                            type='number'                                            helperText={errors.advancePay?.message}
+                                            inputProps={{
+                                              min: 0, // Valor mínimo permitido
+                                              max: order?.fullPay, // Valor máximo permitido
+                                            }}
+                                            {
+                                            ...register('advancePay',
+                                                {
+                                                    required: '*Este campo es obligatorio.',
+                                                })
+                                            }
+                                        />
                                     </Grid>
 
                                 </Grid>
@@ -682,7 +701,7 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
 
 
                                 <DialogActions>
-                                    
+
                                     <Button
                                         size="small"
                                         //onClick={handleSave} 
@@ -693,7 +712,7 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                                         <SaveOutlinedIcon />
                                         Guardar
                                     </Button>
-                                    
+
                                     <Button
                                         size="small"
                                         //style={{ textTransform: 'none' }}
@@ -965,7 +984,7 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                                                                         error={!!errors.quantityComponent}
                                                                         helperText={errors.quantityComponent?.message}
                                                                     />
-                                                                   
+
 
                                                                 </Grid>
                                                             </TableCell>
@@ -1001,10 +1020,10 @@ function ViewSingleOrderModal({ open, order, onClose, devices, states, details, 
                                     </TableContainer>
                                 </Grid>
                             </Grid>
-                            </Container>
-                         </>             
-                        )
-                    }
+                        </Container>
+                    </>
+                )
+                }
                 {/* aqui se puede agregar más secciones*/}
             </DialogContent >
             <DialogActions>
