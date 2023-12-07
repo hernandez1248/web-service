@@ -58,7 +58,7 @@ function ButtonClose({ user }) {
       confirmButtonText: 'Si, estoy seguro',
     }).then((result) => {
       if (result.isConfirmed) {
-        signOut({ callbackUrl: 'login' });
+        signOut({ callbackUrl: '/login' });
       }
     });
 
